@@ -184,6 +184,47 @@ impl Client {
         self.execute(request).await
     }
 
+    /// Send a PATCH request.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or response cannot be parsed.
+    pub async fn patch<T, R>(&self, url: &str, body: &T) -> Result<ApiResponse<R>>
+    where
+        T: Serialize,
+        R: for<'de> Deserialize<'de>,
+    {
+        let request = Request {
+            method: crate::http::Method::Patch,
+            url: url.to_string(),
+            body: Some(serde_json::to_value(body)?),
+            headers: HeaderMap::new(),
+            timeout: None,
+            retry: true,
+        };
+
+        self.execute(request).await
+    }
+
+    /// Send a DELETE request.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails.
+    pub async fn delete(&self, url: &str) -> Result<()> {
+        let request = Request {
+            method: crate::http::Method::Delete,
+            url: url.to_string(),
+            body: None,
+            headers: HeaderMap::new(),
+            timeout: None,
+            retry: false, // Don't retry delete operations
+        };
+
+        let _response: ApiResponse<serde_json::Value> = self.execute(request).await?;
+        Ok(())
+    }
+
     /// Get the client configuration.
     #[must_use]
     pub const fn config(&self) -> &Config {
