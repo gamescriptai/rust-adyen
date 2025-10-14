@@ -7,7 +7,12 @@ license.workspace = true
 repository.workspace = true
 homepage.workspace = true
 documentation.workspace = true
-description = "Placeholder for adyen-platform"
+description = "Adyen Balance Platform API v2 for marketplace operations"
 
 [dependencies]
 adyen-core = { path = "../adyen-core" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[dev-dependencies]
+tokio = { version = "1.0", features = ["macros", "rt"] }
