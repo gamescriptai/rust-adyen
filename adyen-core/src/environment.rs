@@ -9,7 +9,10 @@ use std::fmt;
 /// the appropriate endpoint URLs for different APIs.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub enum Environment {
     /// Test environment for development and testing
     Test,
@@ -25,8 +28,11 @@ pub enum Environment {
 /// This is a validated string that ensures the URL prefix meets Adyen's requirements.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
-pub struct UrlPrefix(compact_str::CompactString);
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
+pub struct UrlPrefix(Box<str>);
 
 impl UrlPrefix {
     /// Create a new URL prefix with validation.
@@ -42,17 +48,22 @@ impl UrlPrefix {
         }
 
         if prefix.len() > 100 {
-            return Err(AdyenError::config("URL prefix cannot be longer than 100 characters"));
-        }
-
-        // Basic validation - only alphanumeric characters, hyphens, and underscores
-        if !prefix.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_') {
             return Err(AdyenError::config(
-                "URL prefix can only contain alphanumeric characters, hyphens, and underscores"
+                "URL prefix cannot be longer than 100 characters",
             ));
         }
 
-        Ok(Self(prefix.into()))
+        // Basic validation - only alphanumeric characters, hyphens, and underscores
+        if !prefix
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
+        {
+            return Err(AdyenError::config(
+                "URL prefix can only contain alphanumeric characters, hyphens, and underscores",
+            ));
+        }
+
+        Ok(Self(prefix.into_boxed_str()))
     }
 
     /// Get the URL prefix as a string slice.
@@ -134,7 +145,10 @@ impl Environment {
         match self {
             Self::Test => "https://checkout-test.adyen.com".to_string(),
             Self::Live { url_prefix } => {
-                format!("https://{}-checkout-live.adyenpayments.com", url_prefix.as_str())
+                format!(
+                    "https://{}-checkout-live.adyenpayments.com",
+                    url_prefix.as_str()
+                )
             }
         }
     }
@@ -250,13 +264,28 @@ mod tests {
     fn test_api_urls() {
         let test_env = Environment::test();
         assert_eq!(test_env.classic_api_url(), "https://pal-test.adyen.com");
-        assert_eq!(test_env.checkout_api_url(), "https://checkout-test.adyen.com");
-        assert_eq!(test_env.management_api_url(), "https://management-test.adyen.com");
+        assert_eq!(
+            test_env.checkout_api_url(),
+            "https://checkout-test.adyen.com"
+        );
+        assert_eq!(
+            test_env.management_api_url(),
+            "https://management-test.adyen.com"
+        );
 
         let live_env = Environment::live("test-prefix").unwrap();
-        assert_eq!(live_env.classic_api_url(), "https://test-prefix-pal-live.adyenpayments.com");
-        assert_eq!(live_env.checkout_api_url(), "https://test-prefix-checkout-live.adyenpayments.com");
-        assert_eq!(live_env.management_api_url(), "https://management-live.adyen.com");
+        assert_eq!(
+            live_env.classic_api_url(),
+            "https://test-prefix-pal-live.adyenpayments.com"
+        );
+        assert_eq!(
+            live_env.checkout_api_url(),
+            "https://test-prefix-checkout-live.adyenpayments.com"
+        );
+        assert_eq!(
+            live_env.management_api_url(),
+            "https://management-live.adyen.com"
+        );
     }
 
     #[test]

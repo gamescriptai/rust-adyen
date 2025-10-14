@@ -1,0 +1,38 @@
+# Clippy configuration for Adyen Rust library
+# Strict linting for production-ready code
+
+# Cognitive complexity threshold
+cognitive-complexity-threshold = 25
+
+# Type complexity threshold
+type-complexity-threshold = 100
+
+# Function lines threshold
+too-many-lines-threshold = 100
+
+# Arguments threshold
+too-many-arguments-threshold = 7
+
+# Enum variant name threshold
+enum-variant-name-threshold = 3
+
+# Single char binding names threshold
+single-char-binding-names-threshold = 4
+
+# Trivial copy threshold
+trivial-copy-size-limit = 64
+
+# Pass by value threshold
+pass-by-value-size-limit = 256
+
+# Large error types threshold
+large-error-threshold = 128
+
+# Max struct field threshold
+max-struct-bools = 3
+
+# Documentation settings
+missing-docs-in-crate-items = true
+
+# Avoid certain patterns (relaxed for development)
+# Note: These are disabled during initial development but should be enabled for production

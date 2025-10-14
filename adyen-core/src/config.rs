@@ -115,14 +115,17 @@ impl ConfigBuilder {
     ///
     /// Returns an error if required fields are missing.
     pub fn build(self) -> Result<Config> {
-        let credentials = self.credentials
+        let credentials = self
+            .credentials
             .ok_or_else(|| AdyenError::config("Credentials are required"))?;
 
         let environment = self.environment.unwrap_or_default();
 
         let timeout = self.timeout.unwrap_or_else(|| Duration::from_secs(60));
 
-        let user_agent = self.user_agent.unwrap_or_else(|| crate::USER_AGENT.to_string());
+        let user_agent = self
+            .user_agent
+            .unwrap_or_else(|| crate::USER_AGENT.to_string());
 
         Ok(Config {
             credentials,
@@ -201,7 +204,10 @@ mod tests {
         assert!(config.environment().is_test());
         assert_eq!(config.timeout(), Duration::from_secs(30));
         assert_eq!(config.user_agent(), "test-agent");
-        assert_eq!(config.default_headers().get("X-Test"), Some(&"value".to_string()));
+        assert_eq!(
+            config.default_headers().get("X-Test"),
+            Some(&"value".to_string())
+        );
         assert!(config.is_logging_enabled());
     }
 

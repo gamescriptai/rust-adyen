@@ -1,0 +1,18 @@
+# Rustfmt configuration for Adyen Rust library
+# Stable formatting settings for consistency
+
+# Stable features only
+edition = "2021"
+hard_tabs = false
+tab_spaces = 4
+newline_style = "Unix"
+use_small_heuristics = "Default"
+reorder_imports = true
+reorder_modules = true
+remove_nested_parens = true
+
+# Code layout (stable features only)
+max_width = 100
+
+# Function formatting (stable features only)
+fn_params_layout = "Tall"

@@ -1,7 +1,7 @@
 //! Common types used across the Adyen library.
 
-use crate::{Currency, AdyenError, Result};
-use rust_decimal::{Decimal, prelude::ToPrimitive};
+use crate::{AdyenError, Currency, Result};
+use rust_decimal::{prelude::ToPrimitive, Decimal};
 use std::fmt;
 
 /// Represents a monetary amount with currency.
@@ -30,7 +30,10 @@ use std::fmt;
 /// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct Amount {
     /// Amount in minor units (e.g., cents)
     minor_units: u64,
@@ -55,7 +58,8 @@ impl Amount {
             return Err(AdyenError::config("Amount cannot be negative"));
         }
 
-        let minor_units = minor_units.to_u64()
+        let minor_units = minor_units
+            .to_u64()
             .ok_or_else(|| AdyenError::config("Amount too large or has too many decimal places"))?;
 
         Ok(Self {
@@ -138,7 +142,9 @@ impl Amount {
             )));
         }
 
-        let result = self.minor_units.checked_add(other.minor_units)
+        let result = self
+            .minor_units
+            .checked_add(other.minor_units)
             .ok_or_else(|| AdyenError::config("Amount addition overflow"))?;
 
         Ok(Self {
@@ -160,7 +166,9 @@ impl Amount {
             )));
         }
 
-        let result = self.minor_units.checked_sub(other.minor_units)
+        let result = self
+            .minor_units
+            .checked_sub(other.minor_units)
             .ok_or_else(|| AdyenError::config("Amount subtraction underflow"))?;
 
         Ok(Self {
@@ -183,14 +191,17 @@ impl fmt::Display for Amount {
 /// failed requests safely.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
-pub struct RequestId(compact_str::CompactString);
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
+pub struct RequestId(Box<str>);
 
 impl RequestId {
     /// Create a new random request ID.
     #[must_use]
     pub fn new() -> Self {
-        Self(uuid::Uuid::new_v4().to_string().into())
+        Self(uuid::Uuid::new_v4().to_string().into_boxed_str())
     }
 
     /// Create a request ID from a string.
@@ -204,9 +215,11 @@ impl RequestId {
             return Err(AdyenError::config("Request ID cannot be empty"));
         }
         if id.len() > 64 {
-            return Err(AdyenError::config("Request ID cannot be longer than 64 characters"));
+            return Err(AdyenError::config(
+                "Request ID cannot be longer than 64 characters",
+            ));
         }
-        Ok(Self(id.into()))
+        Ok(Self(id.into_boxed_str()))
     }
 
     /// Get the request ID as a string slice.
@@ -230,7 +243,7 @@ impl fmt::Display for RequestId {
 
 impl From<uuid::Uuid> for RequestId {
     fn from(uuid: uuid::Uuid) -> Self {
-        Self(uuid.to_string().into())
+        Self(uuid.to_string().into_boxed_str())
     }
 }
 

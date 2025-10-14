@@ -1,6 +1,5 @@
 //! Error types for the Adyen library.
 
-
 /// Result type alias for Adyen operations.
 pub type Result<T> = std::result::Result<T, AdyenError>;
 

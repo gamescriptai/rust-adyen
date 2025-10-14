@@ -48,9 +48,7 @@ impl ApiKey {
             return Err(AdyenError::auth("API key cannot contain whitespace"));
         }
 
-        Ok(Self {
-            key,
-        })
+        Ok(Self { key })
     }
 
     /// Get the API key as a string slice.
@@ -102,10 +100,7 @@ impl BasicAuth {
             return Err(AdyenError::auth("Password cannot be empty"));
         }
 
-        Ok(Self {
-            username,
-            password,
-        })
+        Ok(Self { username, password })
     }
 
     /// Get the username.
@@ -143,7 +138,11 @@ impl fmt::Debug for BasicAuth {
 
 impl fmt::Display for BasicAuth {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "BasicAuth(username: {}, password: [REDACTED])", self.username)
+        write!(
+            f,
+            "BasicAuth(username: {}, password: [REDACTED])",
+            self.username
+        )
     }
 }
 
