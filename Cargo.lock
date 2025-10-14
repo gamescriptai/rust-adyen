@@ -77,6 +77,8 @@ name = "adyen-payments"
 version = "0.1.0"
 dependencies = [
  "adyen-core",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
