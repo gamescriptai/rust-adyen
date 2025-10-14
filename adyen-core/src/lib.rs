@@ -47,7 +47,7 @@ pub mod types;
 
 // Re-export commonly used types
 pub use auth::{ApiKey, BasicAuth, Credentials};
-pub use client::Client;
+pub use client::{ApiResponse, Client, Request};
 pub use config::{Config, ConfigBuilder};
 pub use currency::Currency;
 pub use environment::Environment;
