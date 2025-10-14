@@ -19,18 +19,22 @@ A comprehensive, type-safe Rust library for Adyen's payment processing APIs. Thi
 
 ## 📦 Supported APIs
 
-| API | Version | Status | Description |
-|-----|---------|--------|-------------|
-| **Checkout** | v71 | ✅ Complete | Payment processing and sessions |
-| **Payments** | v68 | ✅ Complete | Classic payment authorization |
-| **Payout** | v68 | ✅ Complete | Fund disbursement (100% coverage) |
-| **Recurring** | v68 | 🚧 Foundation | Saved payment methods |
-| **Management** | v3 | 📋 Planned | Account and terminal management |
-| **Balance Platform** | v2 | 📋 Planned | Platform configuration |
-| **Legal Entity** | v3 | 📋 Planned | KYC and onboarding |
-| **Transfers** | v4 | 📋 Planned | Fund transfers |
-| **Disputes** | v30 | 📋 Planned | Chargeback handling |
-| **Webhooks** | All types | 📋 Planned | Event processing |
+| API | Version | Status | Lines | Description |
+|-----|---------|--------|-------|-------------|
+| **Core** | - | ✅ Complete | 2,100 | Foundation types and HTTP client |
+| **Checkout** | v71 | ✅ Complete | 1,879 | Payment processing and sessions |
+| **Payments** | v68 | ✅ Complete | 2,730 | Classic payment authorization with 3D Secure |
+| **Payout** | v68 | ✅ Complete | 942 | Fund disbursement (100% endpoint coverage) |
+| **Recurring** | v68 | 🚧 Foundation | - | Saved payment methods and subscriptions |
+| **Management** | v3 | 📋 Placeholder | 1 | Account and terminal management |
+| **Balance Platform** | v2 | 📋 Placeholder | 1 | Platform configuration |
+| **Legal Entity** | v3 | 📋 Placeholder | 1 | KYC and onboarding |
+| **Transfers** | v4 | 📋 Placeholder | 1 | Fund transfers |
+| **Disputes** | v30 | 📋 Placeholder | 1 | Chargeback handling |
+| **Webhooks** | All types | 📋 Placeholder | 1 | Event processing |
+| **Bin Lookup** | v54 | 📋 Placeholder | 1 | Card BIN information |
+| **Data Protection** | v1 | 📋 Placeholder | 1 | GDPR compliance |
+| **Stored Value** | v46 | 📋 Placeholder | 1 | Gift cards and prepaid |
 
 ## 🏗️ Workspace Structure
 
@@ -191,23 +195,24 @@ match result {
 
 This library is production-ready for core payment operations:
 
-**✅ Completed (Production Ready):**
-- Core types (Amount, Currency, Environment) with comprehensive test coverage
-- HTTP client with retry logic and error handling
-- Authentication system (API Key + Basic Auth)
-- **Checkout API v71**: Complete payment processing and sessions
-- **Classic Payments API v68**: Traditional payment authorization with 3D Secure
-- **Payout API v68**: Complete fund disbursement (100% endpoint coverage, 47 tests)
-- CI/CD pipeline and testing infrastructure
+**✅ Completed (Production Ready) - 7,651 lines:**
+- **Core Foundation**: Complete HTTP client, auth, types, error handling (2,100 lines)
+- **Checkout API v71**: Payment processing and sessions (1,879 lines)
+- **Classic Payments API v68**: Authorization with 3D Secure and fraud (2,730 lines)
+- **Payout API v68**: Complete fund disbursement, 100% coverage (942 lines)
+- CI/CD pipeline and comprehensive testing infrastructure
 
 **🚧 In Progress:**
 - Recurring API v68: Foundation implemented, building subscription management
-- Enhanced webhook validation and processing
+- Comprehensive webhook validation and signature verification
 
-**📋 Planned:**
-- Management API for account and terminal management
-- Platform APIs for marketplace operations
-- Comprehensive webhook system for all event types
+**📋 Next Phase - Platform & Management:**
+- Management API v3: Account, terminal, and merchant management
+- Balance Platform v2: Marketplace and platform operations
+- Legal Entity v3: KYC, onboarding, and compliance
+- Transfers v4: Advanced fund movement and splitting
+- Disputes v30: Chargeback and dispute management
+- Additional utility APIs (Bin Lookup, Data Protection, Stored Value)
 
 ## 🧪 Testing
 
