@@ -39,5 +39,7 @@ pub use types::{
     RecurringDetailsRequest, RecurringDetailsResult, RecurringDetail,
     DisableRequest, DisableResult, NotifyShopperRequest, NotifyShopperResult,
     ScheduleAccountUpdaterRequest, ScheduleAccountUpdaterResult,
-    Recurring, RecurringContract,
+    Recurring, RecurringContract, Card, BankAccount,
+    // Re-export builders for easy access
+    RecurringDetailsRequestBuilder, DisableRequestBuilder,
 };
