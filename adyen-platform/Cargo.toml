@@ -1,0 +1,13 @@
+[package]
+name = "adyen-platform"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "Placeholder for adyen-platform"
+
+[dependencies]
+adyen-core = { path = "../adyen-core" }

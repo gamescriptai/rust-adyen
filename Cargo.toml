@@ -1,0 +1,77 @@
+[workspace]
+resolver = "2"
+members = [
+    "adyen-core",
+    "adyen-checkout",
+    "adyen-payments",
+    "adyen-webhooks",
+    "adyen-management",
+    "adyen-platform",
+    "adyen-legal-entity",
+    "adyen-transfers",
+    "adyen-disputes",
+    "adyen-bin-lookup",
+    "adyen-data-protection",
+    "adyen-stored-value",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Adyen Rust Team"]
+license = "MIT"
+repository = "https://github.com/your-org/rust-adyen"
+homepage = "https://github.com/your-org/rust-adyen"
+documentation = "https://docs.rs/adyen"
+description = "Comprehensive Rust library for Adyen's payment APIs"
+keywords = ["adyen", "payments", "api", "financial", "checkout"]
+categories = ["api-bindings", "web-programming"]
+readme = "README.md"
+
+[workspace.dependencies]
+# Core HTTP and async
+reqwest = { version = "0.11", features = ["json", "native-tls"] }
+tokio = { version = "1.0", features = ["full"] }
+
+# Serialization (dual support required)
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rkyv = { version = "0.7", features = ["validation"] }
+
+# Performance and ergonomics
+smallvec = { version = "1.0", features = ["serde"] }
+compact_str = { version = "0.7", features = ["serde"] }  # Alternative to Box<str>
+bstr = "1.0"         # Better string handling
+
+# Types and utilities
+chrono = { version = "0.4", features = ["serde"] }
+rust_decimal = { version = "1.8", features = ["serde", "rkyv"] }
+uuid = { version = "1.0", features = ["v4", "serde"] }
+url = "2.0"
+
+# Error handling and validation
+thiserror = "1.0"
+validator = { version = "0.16", features = ["derive"] }
+
+# Cryptography
+hmac = "0.12"
+sha2 = "0.10"
+base64 = "0.21"
+
+# Optional features
+tracing = "0.1"
+metrics = "0.21"
+
+# Development dependencies
+tokio-test = "0.4"
+mockito = "1.0"
+proptest = "1.0"
+criterion = "0.5"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.dev]
+debug = true
