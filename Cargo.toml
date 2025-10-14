@@ -4,6 +4,8 @@ members = [
     "adyen-core",
     "adyen-checkout",
     "adyen-payments",
+    "adyen-recurring",
+    "adyen-payout",
     "adyen-webhooks",
     "adyen-management",
     "adyen-platform",

@@ -82,10 +82,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "adyen-payout"
+version = "0.1.0"
+dependencies = [
+ "adyen-core",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "adyen-platform"
 version = "0.1.0"
 dependencies = [
  "adyen-core",
+]
+
+[[package]]
+name = "adyen-recurring"
+version = "0.1.0"
+dependencies = [
+ "adyen-core",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
