@@ -47,7 +47,6 @@
 
 #![deny(missing_docs)]
 #![warn(clippy::all, clippy::pedantic)]
-#![allow(clippy::module_name_repetitions)]
 
 pub mod api;
 pub mod types;
