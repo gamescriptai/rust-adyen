@@ -54,7 +54,7 @@ url = "2.0"
 
 # Error handling and validation
 thiserror = "1.0"
-validator = { version = "0.16", features = ["derive"] }
+validator = { version = "0.20", features = ["derive"] }
 
 # Cryptography
 hmac = "0.12"
