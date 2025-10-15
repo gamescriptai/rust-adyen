@@ -1,5 +1,8 @@
 //! Fraud detection types and result handling for payment risk assessment.
 
+#![allow(clippy::type_complexity)]
+#![allow(clippy::return_self_not_must_use)]
+
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

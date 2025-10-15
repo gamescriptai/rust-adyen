@@ -1,5 +1,8 @@
 //! Payment modification types for capture, cancel, refund, and adjustment operations.
 
+#![allow(clippy::type_complexity)]
+#![allow(clippy::return_self_not_must_use)]
+
 use crate::types::ApplicationInfo;
 use adyen_core::Amount;
 use serde::{Deserialize, Serialize};
