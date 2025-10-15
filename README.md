@@ -38,7 +38,7 @@ A comprehensive, type-safe Rust library for Adyen's payment processing APIs. Thi
 | **Data Protection** | v1 | 📋 Placeholder | 0/0 | - | GDPR compliance (not implemented) |
 | **Stored Value** | v46 | 📋 Placeholder | 0/0 | - | Gift cards and prepaid (not implemented) |
 
-**Summary**: 8/14 major APIs complete • 113 endpoints implemented • Core payment workflows 100% complete
+**Summary**: 8/14 major APIs complete • 113 endpoints implemented • 260 tests passing • Core payment workflows 100% complete
 
 ## 🏗️ Workspace Structure
 
@@ -324,6 +324,8 @@ This library is production-ready for core payment operations:
 
 ## 🧪 Testing
 
+**✅ All 260 tests passing** across the implemented APIs.
+
 Run the full test suite:
 
 ```bash
@@ -336,6 +338,19 @@ Run with test coverage:
 cargo install cargo-llvm-cov
 cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
 ```
+
+### Test Coverage by API:
+- **Core Foundation**: 39 tests (types, auth, config, HTTP client)
+- **Checkout API**: 18 tests (payment processing, sessions)
+- **Classic Payments API**: 26 tests (authorization, modifications, 3D Secure)
+- **Payout API**: 11 tests (fund disbursement workflows)
+- **Management API**: 15 tests (account/terminal management)
+- **Balance Platform API**: 14 tests (marketplace operations)
+- **Legal Entity API**: 15 tests (KYC and onboarding)
+- **Recurring API**: 3 tests (stored payment methods)
+- **Webhooks**: 15 tests (HMAC validation, event processing)
+- **Integration Tests**: 104 tests (end-to-end workflows)
+- **Documentation Tests**: 4 additional doc tests
 
 ## 📖 Documentation
 

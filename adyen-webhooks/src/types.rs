@@ -62,7 +62,6 @@ impl Amount {
 /// All Adyen webhooks follow this structure, containing a `live` field indicating
 /// the environment and an array of notification items with the actual event data.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
 #[serde(rename_all = "camelCase")]
 pub struct Webhook {
     /// Indicates whether this webhook was sent from the live environment.
@@ -77,7 +76,6 @@ pub struct Webhook {
 ///
 /// This is a wrapper around `NotificationRequestItem` that matches Adyen's webhook structure.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
 pub struct NotificationItem {
     /// The actual notification request item containing event data.
     #[serde(rename = "NotificationRequestItem")]
@@ -89,13 +87,11 @@ pub struct NotificationItem {
 /// This structure contains all the essential information about a webhook event,
 /// including references, amounts, event details, and additional data.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
 #[serde(rename_all = "camelCase")]
 pub struct NotificationRequestItem {
     /// Additional data provided with the webhook event.
     /// May contain HMAC signature and other event-specific information.
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[cfg_attr(feature = "rkyv", rkyv(skip))]
     pub additional_data: Option<HashMap<String, serde_json::Value>>,
     /// The payment amount associated with this event.
     pub amount: Amount,
@@ -103,7 +99,6 @@ pub struct NotificationRequestItem {
     pub event_code: String,
     /// The date and time when the event occurred.
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[cfg_attr(feature = "rkyv", rkyv(skip))]
     pub event_date: Option<DateTime<Utc>>,
     /// The merchant account identifier.
     pub merchant_account_code: String,

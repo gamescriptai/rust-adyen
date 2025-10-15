@@ -1,7 +1,7 @@
 //! Checkout session types for creating and managing sessions.
 
 use adyen_core::{Amount, AdyenError, Result};
-use crate::types::payments::{Address, PaymentMethodDetails};
+use crate::types::payments::Address;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

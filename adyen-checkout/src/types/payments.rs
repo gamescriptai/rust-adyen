@@ -1,6 +1,6 @@
 //! Payment request and response types.
 
-use adyen_core::{Amount, RequestId, AdyenError, Result};
+use adyen_core::{Amount, AdyenError, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
