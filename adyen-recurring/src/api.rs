@@ -130,6 +130,35 @@ impl RecurringApi {
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
+
+    /// Create permits for a recurring contract.
+    ///
+    /// Creates permits that allow partners to use a recurring contract.
+    /// This is used for recurring payment scenarios where you want to grant
+    /// permissions to third parties to process payments using stored payment methods.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn create_permit(&self, request: &CreatePermitRequest) -> Result<CreatePermitResult> {
+        let url = format!("{}/pal/servlet/Recurring/v68/createPermit", self.client.config().environment().classic_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Disable a permit.
+    ///
+    /// Disables a permit that was previously created for a recurring contract.
+    /// This revokes the permission for the partner to use the stored payment method.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn disable_permit(&self, request: &DisablePermitRequest) -> Result<DisablePermitResult> {
+        let url = format!("{}/pal/servlet/Recurring/v68/disablePermit", self.client.config().environment().classic_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
 }
 
 #[cfg(test)]
@@ -148,5 +177,44 @@ mod tests {
 
         let api = RecurringApi::new(config).unwrap();
         assert!(api.client.config().environment().is_test());
+    }
+
+    #[test]
+    fn test_create_permit_request_construction() {
+        use crate::types::*;
+        use adyen_core::{Amount, Currency};
+
+        let permit = Permit {
+            partner: "test_partner".into(),
+            restriction: Some(PermitRestriction {
+                max_amount: Some(Amount::from_major_units(100, Currency::EUR)),
+                single_use: Some(true),
+                valid_until: Some("2025-12-31".into()),
+            }),
+        };
+
+        let request = CreatePermitRequest {
+            merchant_account: "TestMerchant".into(),
+            permits: vec![permit],
+            recurring_detail_reference: "8415736344864224".into(),
+        };
+
+        assert_eq!(request.merchant_account.as_ref(), "TestMerchant");
+        assert_eq!(request.permits.len(), 1);
+        assert_eq!(request.permits[0].partner.as_ref(), "test_partner");
+        assert_eq!(request.recurring_detail_reference.as_ref(), "8415736344864224");
+    }
+
+    #[test]
+    fn test_disable_permit_request_construction() {
+        use crate::types::*;
+
+        let request = DisablePermitRequest {
+            merchant_account: "TestMerchant".into(),
+            token: "permit_token_12345".into(),
+        };
+
+        assert_eq!(request.merchant_account.as_ref(), "TestMerchant");
+        assert_eq!(request.token.as_ref(), "permit_token_12345");
     }
 }

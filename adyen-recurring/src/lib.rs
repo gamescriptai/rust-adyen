@@ -8,6 +8,7 @@
 //!
 //! - **Stored Payment Methods**: List and manage stored payment methods
 //! - **Payment Method Management**: Disable stored payment methods
+//! - **Permit Management**: Create and disable permits for recurring contracts
 //! - **Shopper Notifications**: Send notifications about stored payment methods
 //! - **Account Updater**: Schedule automatic card updates
 //! - **Type Safety**: Full Rust type safety with builder patterns
@@ -39,6 +40,8 @@ pub use types::{
     RecurringDetailsRequest, RecurringDetailsResult, RecurringDetail,
     DisableRequest, DisableResult, NotifyShopperRequest, NotifyShopperResult,
     ScheduleAccountUpdaterRequest, ScheduleAccountUpdaterResult,
+    CreatePermitRequest, CreatePermitResult, DisablePermitRequest, DisablePermitResult,
+    Permit, PermitResult, PermitRestriction,
     Recurring, RecurringContract, Card, BankAccount,
     // Re-export builders for easy access
     RecurringDetailsRequestBuilder, DisableRequestBuilder,

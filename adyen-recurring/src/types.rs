@@ -322,3 +322,94 @@ impl DisableRequestBuilder {
         })
     }
 }
+
+// ============================================================================
+// Permit Management Types
+// ============================================================================
+
+/// Request to create permits for a recurring contract.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CreatePermitRequest {
+    /// The merchant account identifier.
+    pub merchant_account: Box<str>,
+    /// The permits to create for this recurring contract.
+    pub permits: Vec<Permit>,
+    /// The recurring contract the new permits will use.
+    pub recurring_detail_reference: Box<str>,
+}
+
+/// Result of creating permits.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CreatePermitResult {
+    /// Details of the created permits.
+    #[serde(default)]
+    pub permit_result_list: Vec<PermitResult>,
+    /// PSP reference for tracking.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub psp_reference: Option<Box<str>>,
+}
+
+/// Request to disable a permit.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DisablePermitRequest {
+    /// The merchant account identifier.
+    pub merchant_account: Box<str>,
+    /// The token to disable.
+    pub token: Box<str>,
+}
+
+/// Result of disabling a permit.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DisablePermitResult {
+    /// Response status.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub response: Option<Box<str>>,
+    /// PSP reference for tracking.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub psp_reference: Option<Box<str>>,
+}
+
+/// Permit configuration for recurring contracts.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Permit {
+    /// The partner that will receive permits for this recurring contract.
+    pub partner: Box<str>,
+    /// Optional restrictions for the permit.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub restriction: Option<PermitRestriction>,
+}
+
+/// Result of permit creation.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PermitResult {
+    /// The partner.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub partner: Option<Box<str>>,
+    /// Result code.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub result_code: Option<Box<str>>,
+    /// The token.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub token: Option<Box<str>>,
+}
+
+/// Restrictions for permits.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PermitRestriction {
+    /// Maximum amount restriction.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_amount: Option<Amount>,
+    /// Single use restriction.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub single_use: Option<bool>,
+    /// Valid until date.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub valid_until: Option<Box<str>>,
+}

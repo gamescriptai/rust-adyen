@@ -5,7 +5,7 @@
 [![Build Status](https://github.com/gamescriptai/rust-adyen/workflows/CI/badge.svg)](https://github.com/gamescriptai/rust-adyen/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A comprehensive, type-safe Rust library for Adyen's payment processing APIs. This library provides 100% feature parity with the official Go library, implementing all 15+ APIs and 7 webhook types with modern Rust patterns.
+A comprehensive, type-safe Rust library for Adyen's payment processing APIs. This library provides core payment functionality with modern Rust patterns, implementing 8 major APIs with comprehensive webhook support and high test coverage.
 
 ## 🚀 Features
 
@@ -19,38 +19,40 @@ A comprehensive, type-safe Rust library for Adyen's payment processing APIs. Thi
 
 ## 📦 Supported APIs
 
-| API | Version | Status | Lines | Description |
-|-----|---------|--------|-------|-------------|
-| **Core** | - | ✅ Complete | 2,100 | Foundation types and HTTP client |
-| **Checkout** | v71 | ✅ Complete | 1,879 | Payment processing and sessions |
-| **Payments** | v68 | ✅ Complete | 2,730 | Classic payment authorization with 3D Secure |
-| **Payout** | v68 | ✅ Complete | 942 | Fund disbursement (100% endpoint coverage) |
-| **Recurring** | v68 | 🚧 Foundation | - | Saved payment methods and subscriptions |
-| **Management** | v3 | 📋 Placeholder | 1 | Account and terminal management |
-| **Balance Platform** | v2 | 📋 Placeholder | 1 | Platform configuration |
-| **Legal Entity** | v3 | 📋 Placeholder | 1 | KYC and onboarding |
-| **Transfers** | v4 | 📋 Placeholder | 1 | Fund transfers |
-| **Disputes** | v30 | 📋 Placeholder | 1 | Chargeback handling |
-| **Webhooks** | All types | 📋 Placeholder | 1 | Event processing |
-| **Bin Lookup** | v54 | 📋 Placeholder | 1 | Card BIN information |
-| **Data Protection** | v1 | 📋 Placeholder | 1 | GDPR compliance |
-| **Stored Value** | v46 | 📋 Placeholder | 1 | Gift cards and prepaid |
+| API | Version | Status | Endpoints | Tests | Description |
+|-----|---------|--------|-----------|-------|-------------|
+| **Core** | - | ✅ Complete | N/A | ✅ | Foundation types and HTTP client |
+| **Recurring** | v68 | ✅ Complete | 6/6 | ✅ 21 tests | 100% Go parity, permit management |
+| **Checkout** | v71 | 🔄 Partial | 5/24 | ✅ 18 tests | Core payment flow (missing 19 endpoints) |
+| **Payments** | v68 | 🔄 Mostly Complete | 7/13 | ✅ 48 tests | Core payment flows (missing 6 endpoints) |
+| **Payout** | v68 | ✅ Complete | 6/6 | ✅ 47 tests | 100% Go parity, instant payouts |
+| **Management** | v3 | ✅ Complete | 29/29 | ✅ 15 tests | Account/terminal management |
+| **Balance Platform** | v2 | ✅ Complete | 14/14 | ✅ 14 tests | Marketplace operations |
+| **Legal Entity** | v3 | ✅ Complete | 8/8 | ✅ 15 tests | KYC and onboarding |
+| **Webhooks** | v1 | ✅ Complete | N/A | ✅ 15 tests | HMAC validation, all event types |
+| **Transfers** | v4 | ⏸️ Deferred | 0/3 | - | Fund transfers (90 models) |
+| **Disputes** | v30 | ⏸️ Deferred | 0/1 | - | Chargeback handling |
+| **Bin Lookup** | v54 | ⏸️ Deferred | 0/1 | - | Card BIN information |
+| **Data Protection** | v1 | ⏸️ Deferred | 0/1 | - | GDPR compliance |
+| **Stored Value** | v46 | ⏸️ Deferred | 0/1 | - | Gift cards and prepaid |
+
+**Summary**: 8/14 major APIs complete • 190+ tests passing • Core payment workflows ready
 
 ## 🏗️ Workspace Structure
 
 ```
 rust-adyen/
 ├── adyen-core/          # ✅ Foundation types and HTTP client
-├── adyen-checkout/      # ✅ Payment processing and sessions
-├── adyen-payments/      # ✅ Classic payment authorization
-├── adyen-payout/        # ✅ Fund disbursement (100% coverage)
-├── adyen-recurring/     # 🚧 Saved payment methods (foundation)
-├── adyen-management/    # Account management
-├── adyen-platform/      # Balance platform
-├── adyen-legal-entity/  # KYC/onboarding
-├── adyen-transfers/     # Fund transfers
-├── adyen-disputes/      # Chargeback handling
-├── adyen-webhooks/      # Webhook processing
+├── adyen-recurring/     # ✅ Saved payment methods (100% Go parity)
+├── adyen-checkout/      # 🔄 Payment processing (5/24 endpoints)
+├── adyen-payments/      # 🔄 Classic authorization (7/13 endpoints)
+├── adyen-payout/        # ✅ Fund disbursement (100% Go parity)
+├── adyen-management/    # ✅ Account management (100% Go parity)
+├── adyen-balance-platform/ # ✅ Platform operations (100% Go parity)
+├── adyen-legal-entity/  # ✅ KYC/onboarding (100% Go parity)
+├── adyen-webhooks/      # ✅ Webhook processing (HMAC validation)
+├── adyen-transfers/     # ⏸️ Fund transfers (deferred)
+├── adyen-disputes/      # ⏸️ Chargeback handling (deferred)
 └── examples/           # Usage examples
 ```
 
@@ -61,8 +63,11 @@ Add to your `Cargo.toml`:
 ```toml
 [dependencies]
 adyen-core = "0.1"
-adyen-checkout = "0.1"  # Payment processing
-adyen-payout = "0.1"    # Fund disbursement
+adyen-recurring = "0.1"  # Saved payment methods
+adyen-checkout = "0.1"   # Payment processing
+adyen-payments = "0.1"   # Classic authorization
+adyen-payout = "0.1"     # Fund disbursement
+adyen-webhooks = "0.1"   # Webhook processing
 tokio = { version = "1.0", features = ["full"] }
 ```
 
@@ -135,6 +140,31 @@ let response = payout.submit(&request).await?;
 println!("Payout submitted: {}", response.psp_reference);
 ```
 
+### Webhook Processing
+
+```rust
+use adyen_webhooks::{HmacValidator, handle_webhook};
+
+// Validate webhook authenticity
+let validator = HmacValidator::new("your_hmac_key_in_hex")?;
+
+// Parse incoming webhook
+let webhook = handle_webhook(webhook_json)?;
+
+// Validate and process each notification
+for item in webhook.get_notification_items() {
+    if validator.validate_notification(item) {
+        match item.event_code.as_str() {
+            "AUTHORISATION" => println!("Payment authorized: {}", item.psp_reference),
+            "CAPTURE" => println!("Payment captured: {}", item.psp_reference),
+            _ => println!("Event: {} for {}", item.event_code, item.psp_reference),
+        }
+    } else {
+        println!("Invalid webhook signature!");
+    }
+}
+```
+
 ## 🔧 Configuration
 
 ### Environment Setup
@@ -189,7 +219,8 @@ match result {
 ### Security
 - Secure credential handling with redacted debug output
 - HTTPS-only connections
-- Webhook signature validation (coming soon)
+- Comprehensive webhook HMAC signature validation
+- Type-safe payment processing preventing common errors
 
 ## 🚧 Development Status
 

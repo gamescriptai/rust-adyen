@@ -42,3 +42,6 @@ tarpaulin-report.html
 # Examples that might contain secrets
 /examples/.env
 /examples/config.toml
+
+# Development plans (not for public)
+.docs/

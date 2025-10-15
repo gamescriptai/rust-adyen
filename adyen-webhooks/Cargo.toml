@@ -7,7 +7,27 @@ license.workspace = true
 repository.workspace = true
 homepage.workspace = true
 documentation.workspace = true
-description = "Placeholder for adyen-webhooks"
+description = "Adyen Webhooks v1 for secure webhook processing and HMAC validation"
 
 [dependencies]
 adyen-core = { path = "../adyen-core" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+hmac = "0.12"
+sha2 = "0.10"
+hex = "0.4"
+base64 = "0.21"
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "1.0"
+
+[dependencies.rkyv]
+version = "0.7"
+features = ["validation"]
+optional = true
+
+[features]
+default = []
+rkyv = ["dep:rkyv"]
+
+[dev-dependencies]
+tokio = { version = "1.0", features = ["macros", "rt"] }
