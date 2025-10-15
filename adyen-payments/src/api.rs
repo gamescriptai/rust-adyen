@@ -101,6 +101,32 @@ impl PaymentsApi {
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
+
+    /// Get the authentication result for a 3D Secure transaction.
+    ///
+    /// Retrieves the 3D Secure authentication result for a specific transaction.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn get_authentication_result(&self, request: &AuthenticationResultRequest) -> Result<AuthenticationResultResponse> {
+        let url = format!("{}/pal/servlet/Payment/v68/getAuthenticationResult", self.client.config().environment().classic_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Retrieve the 3D Secure 2.0 result.
+    ///
+    /// Retrieves the result of a 3D Secure 2.0 authentication.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn retrieve_3ds2_result(&self, request: &ThreeDSResultRequest) -> Result<ThreeDSResultResponse> {
+        let url = format!("{}/pal/servlet/Payment/v68/retrieve3ds2Result", self.client.config().environment().classic_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
 }
 
 /// Adyen Payment Modifications API client.
@@ -194,6 +220,61 @@ impl ModificationsApi {
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn cancel_or_refund(&self, request: &CancelOrRefundRequest) -> Result<ModificationResult> {
         let url = format!("{}/pal/servlet/Payment/v68/cancelOrRefund", self.client.config().environment().classic_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Adjust the authorization amount.
+    ///
+    /// Changes the authorization amount for an existing authorization.
+    /// This can be used to increase or decrease the authorized amount.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn adjust_authorisation(&self, request: &AdjustAuthorisationRequest) -> Result<ModificationResult> {
+        let url = format!("{}/pal/servlet/Payment/v68/adjustAuthorisation", self.client.config().environment().classic_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Make a donation.
+    ///
+    /// Donates a specified amount from a payment to a charity or cause.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn donate(&self, request: &DonateRequest) -> Result<ModificationResult> {
+        let url = format!("{}/pal/servlet/Payment/v68/donate", self.client.config().environment().classic_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Perform a technical cancel.
+    ///
+    /// Cancels a payment for technical reasons. This is typically used
+    /// when there are technical issues that prevent normal processing.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn technical_cancel(&self, request: &TechnicalCancelRequest) -> Result<ModificationResult> {
+        let url = format!("{}/pal/servlet/Payment/v68/technicalCancel", self.client.config().environment().classic_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Void a pending refund.
+    ///
+    /// Cancels a refund that is still pending. This can be used to stop
+    /// a refund before it has been processed.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn void_pending_refund(&self, request: &VoidPendingRefundRequest) -> Result<ModificationResult> {
+        let url = format!("{}/pal/servlet/Payment/v68/voidPendingRefund", self.client.config().environment().classic_api_url());
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }

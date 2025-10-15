@@ -13,3 +13,4 @@ description = "Adyen Checkout API v71 for payment processing"
 adyen-core = { path = "../adyen-core" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+urlencoding = "2.1"

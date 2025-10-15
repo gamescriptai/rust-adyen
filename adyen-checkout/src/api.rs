@@ -148,6 +148,284 @@ impl CheckoutApi {
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
+
+    /// Get the result of a payment session.
+    ///
+    /// Retrieves the result of a payment session that was created earlier.
+    /// Use this to get the final payment result for sessions.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn get_session_result(&self, session_id: &str, session_result: Option<&str>) -> Result<SessionResultResponse> {
+        let mut url = format!("{}/v71/sessions/{}", self.client.config().environment().checkout_api_url(), session_id);
+        if let Some(result) = session_result {
+            url.push_str(&format!("?sessionResult={}", urlencoding::encode(result)));
+        }
+        let response = self.client.get(&url).await?;
+        Ok(response.data)
+    }
+
+    /// Get stored payment methods for a shopper.
+    ///
+    /// Retrieves the stored payment methods for a given shopper reference.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn get_stored_payment_methods(&self, merchant_account: &str, shopper_reference: &str) -> Result<ListStoredPaymentMethodsResponse> {
+        let url = format!("{}/v71/storedPaymentMethods?merchantAccount={}&shopperReference={}",
+            self.client.config().environment().checkout_api_url(),
+            urlencoding::encode(merchant_account),
+            urlencoding::encode(shopper_reference)
+        );
+        let response = self.client.get(&url).await?;
+        Ok(response.data)
+    }
+
+    /// Delete a stored payment method.
+    ///
+    /// Removes a stored payment method for a shopper.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn delete_stored_payment_method(&self, stored_payment_method_id: &str, merchant_account: &str, shopper_reference: &str) -> Result<()> {
+        let url = format!("{}/v71/storedPaymentMethods/{}?merchantAccount={}&shopperReference={}",
+            self.client.config().environment().checkout_api_url(),
+            urlencoding::encode(stored_payment_method_id),
+            urlencoding::encode(merchant_account),
+            urlencoding::encode(shopper_reference)
+        );
+        let _response = self.client.delete(&url).await?;
+        Ok(())
+    }
+
+    /// Check the balance of a payment method.
+    ///
+    /// Retrieves the balance available on a gift card or other prepaid payment method.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn payment_methods_balance(&self, request: &BalanceCheckRequest) -> Result<BalanceCheckResponse> {
+        let url = format!("{}/v71/paymentMethods/balance", self.client.config().environment().checkout_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Create a payment link.
+    ///
+    /// Creates a payment link that can be sent to shoppers for payment.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn payment_links(&self, request: &PaymentLinkRequest) -> Result<PaymentLinkResponse> {
+        let url = format!("{}/v71/paymentLinks", self.client.config().environment().checkout_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Get a payment link by ID.
+    ///
+    /// Retrieves the details of a payment link.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn get_payment_link(&self, link_id: &str) -> Result<PaymentLinkResponse> {
+        let url = format!("{}/v71/paymentLinks/{}",
+            self.client.config().environment().checkout_api_url(),
+            urlencoding::encode(link_id)
+        );
+        let response = self.client.get(&url).await?;
+        Ok(response.data)
+    }
+
+    /// Get origin keys for client-side encryption.
+    ///
+    /// Generates origin keys for securing payment data on the client side.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn origin_keys(&self, request: &OriginKeysRequest) -> Result<OriginKeysResponse> {
+        let url = format!("{}/v71/originKeys", self.client.config().environment().checkout_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Get Apple Pay session.
+    ///
+    /// Initiates an Apple Pay session for payment processing.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn apple_pay_sessions(&self, request: &ApplePaySessionRequest) -> Result<ApplePaySessionResponse> {
+        let url = format!("{}/v71/applePay/sessions", self.client.config().environment().checkout_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Capture a payment.
+    ///
+    /// Captures an authorized payment for the specified amount.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn capture_payment(&self, payment_psp_reference: &str, request: &CaptureRequest) -> Result<CaptureResponse> {
+        let url = format!("{}/v71/payments/{}/captures",
+            self.client.config().environment().checkout_api_url(),
+            urlencoding::encode(payment_psp_reference)
+        );
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Refund a payment.
+    ///
+    /// Refunds a captured payment for the specified amount.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn refund_payment(&self, payment_psp_reference: &str, request: &RefundRequest) -> Result<RefundResponse> {
+        let url = format!("{}/v71/payments/{}/refunds",
+            self.client.config().environment().checkout_api_url(),
+            urlencoding::encode(payment_psp_reference)
+        );
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Cancel a payment.
+    ///
+    /// Cancels an authorized payment.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn cancel_payment(&self, payment_psp_reference: &str, request: &CancelRequest) -> Result<CancelResponse> {
+        let url = format!("{}/v71/payments/{}/cancels",
+            self.client.config().environment().checkout_api_url(),
+            urlencoding::encode(payment_psp_reference)
+        );
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Reverse a payment.
+    ///
+    /// Reverses an authorized payment.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn reverse_payment(&self, payment_psp_reference: &str, request: &ReversalRequest) -> Result<ReversalResponse> {
+        let url = format!("{}/v71/payments/{}/reversals",
+            self.client.config().environment().checkout_api_url(),
+            urlencoding::encode(payment_psp_reference)
+        );
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Update payment amount.
+    ///
+    /// Updates the amount of an authorized payment.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn update_payment_amount(&self, payment_psp_reference: &str, request: &AmountUpdateRequest) -> Result<AmountUpdateResponse> {
+        let url = format!("{}/v71/payments/{}/amountUpdates",
+            self.client.config().environment().checkout_api_url(),
+            urlencoding::encode(payment_psp_reference)
+        );
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Cancel payment (legacy endpoint).
+    ///
+    /// Cancels a payment using the legacy cancel endpoint.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn cancel(&self, request: &CancelRequest) -> Result<CancelResponse> {
+        let url = format!("{}/v71/cancels", self.client.config().environment().checkout_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Create an order.
+    ///
+    /// Creates an order for payment processing.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn create_order(&self, request: &CreateOrderRequest) -> Result<CreateOrderResponse> {
+        let url = format!("{}/v71/orders", self.client.config().environment().checkout_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Cancel an order.
+    ///
+    /// Cancels an existing order.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn cancel_order(&self, request: &CancelOrderRequest) -> Result<CancelOrderResponse> {
+        let url = format!("{}/v71/orders/cancel", self.client.config().environment().checkout_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Make a donation.
+    ///
+    /// Processes a donation request.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn donations(&self, request: &DonationRequest) -> Result<DonationResponse> {
+        let url = format!("{}/v71/donations", self.client.config().environment().checkout_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Get donation campaigns.
+    ///
+    /// Retrieves available donation campaigns.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn donation_campaigns(&self, request: &DonationCampaignsRequest) -> Result<DonationCampaignsResponse> {
+        let url = format!("{}/v71/donationCampaigns", self.client.config().environment().checkout_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
+
+    /// Update PayPal order.
+    ///
+    /// Updates a PayPal order with new information.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the request fails or the response cannot be parsed.
+    pub async fn paypal_update_order(&self, request: &PayPalUpdateOrderRequest) -> Result<PayPalUpdateOrderResponse> {
+        let url = format!("{}/v71/paypal/updateOrder", self.client.config().environment().checkout_api_url());
+        let response = self.client.post(&url, request).await?;
+        Ok(response.data)
+    }
 }
 
 #[cfg(test)]
