@@ -6,7 +6,7 @@ Thank you for your interest in contributing to the Adyen Rust library! This docu
 
 ### Prerequisites
 
-- Rust 1.70.0 or later
+- Rust 1.82.0 or later
 - Git
 - A GitHub account
 
@@ -14,7 +14,7 @@ Thank you for your interest in contributing to the Adyen Rust library! This docu
 
 1. **Fork and Clone**
    ```bash
-   git clone https://github.com/your-username/rust-adyen.git
+   git clone https://github.com/gamescriptai/rust-adyen.git
    cd rust-adyen
    ```
 
@@ -38,14 +38,14 @@ Thank you for your interest in contributing to the Adyen Rust library! This docu
 
 ### Reporting Issues
 
-- Use the [GitHub Issues](https://github.com/your-username/rust-adyen/issues) page
+- Use the [GitHub Issues](https://github.com/gamescriptai/rust-adyen/issues) page
 - Search existing issues first to avoid duplicates
 - Include minimal reproduction code for bugs
 - Use clear, descriptive titles
 
 ### Feature Requests
 
-- Check the [implementation plan](./IMPLEMENTATION.md) first
+- Check the [roadmap section](./README.md#-roadmap) in the README first
 - Open an issue with the "enhancement" label
 - Describe the use case and expected behavior
 - Consider implementation complexity and breaking changes
@@ -240,10 +240,10 @@ refactor: improve error handling patterns
 
 ## 🏗️ Implementation Phases
 
-Check [IMPLEMENTATION.md](./IMPLEMENTATION.md) for the current implementation roadmap. When contributing:
+Check the [roadmap section](./README.md#-roadmap) in the README for the current implementation roadmap. When contributing:
 
 1. **Check Current Phase**: Ensure your contribution aligns with the current development phase
-2. **Update Progress**: Mark completed tasks in the implementation plan
+2. **Update Progress**: Mark completed tasks in the roadmap
 3. **Follow Patterns**: Use established patterns from completed modules
 
 ### Priority Areas
@@ -289,7 +289,7 @@ cargo audit
 ### Reporting Security Issues
 
 - **DO NOT** file public issues for security vulnerabilities
-- Email security issues to: [security@your-domain.com]
+- Email security issues to: [support@gamescript.ai]
 - Include detailed reproduction steps
 
 ### Security Guidelines

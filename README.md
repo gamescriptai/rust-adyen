@@ -360,6 +360,32 @@ Generate and view documentation:
 cargo doc --all-features --workspace --no-deps --open
 ```
 
+## 🗺️ Roadmap
+
+### Phase 1: Core Payment Infrastructure ✅ **COMPLETED**
+- [x] **Foundation**: Core HTTP client, authentication, and error handling
+- [x] **Core Payment APIs**: Checkout, Payments, Recurring, Payout (100% Go library parity)
+- [x] **Security**: HMAC webhook validation and secure credential handling
+- [x] **Testing**: Comprehensive test coverage (260+ tests)
+
+### Phase 2: Platform APIs ✅ **COMPLETED**
+- [x] **Management API**: Account and terminal management (20 endpoints)
+- [x] **Balance Platform API**: Marketplace operations (18 endpoints)
+- [x] **Legal Entity API**: KYC and onboarding workflows (26 endpoints)
+
+### Phase 3: Specialized APIs 🚧 **PLANNED**
+- [ ] **Transfers API v4**: Fund transfers and splitting
+- [ ] **Disputes API v30**: Chargeback and dispute management
+- [ ] **Bin Lookup API v54**: Card BIN information services
+- [ ] **Data Protection API v1**: GDPR compliance tools
+- [ ] **Stored Value API v46**: Gift cards and prepaid solutions
+
+### Phase 4: Advanced Features 🚧 **PLANNED**
+- [ ] **Enhanced Platform Coverage**: Additional specialized endpoints
+- [ ] **Advanced Webhooks**: Real-time event streaming
+- [ ] **Performance Optimizations**: Connection pooling and caching
+- [ ] **Integration Examples**: Real-world usage patterns
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
@@ -402,6 +428,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [Documentation](https://docs.rs/adyen)
 - [GitHub Issues](https://github.com/gamescriptai/rust-adyen/issues)
+- [Email Support](mailto:support@gamescript.ai)
 - [Adyen API Documentation](https://docs.adyen.com/)
 
 ---
