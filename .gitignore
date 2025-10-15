@@ -1,8 +1,13 @@
-# Rust
+# Rust build artifacts
 /target/
+**/target/
 **/*.rs.bk
 *.pdb
-Cargo.lock
+# Keep Cargo.lock for applications, ignore for libraries
+# Cargo.lock
+
+# Rust toolchain
+**/.rustc_info.json
 
 # IDE
 .vscode/
@@ -35,6 +40,14 @@ Thumbs.db
 *.profraw
 lcov.info
 tarpaulin-report.html
+cobertura.xml
+coverage/
+
+# Rust-specific temporary files
+**/*.tmp
+**/*.swp
+**/*.orig
+**/*.rej
 
 # Benchmarks
 /benches/results/
