@@ -5,7 +5,7 @@
 [![Build Status](https://github.com/gamescriptai/rust-adyen/workflows/CI/badge.svg)](https://github.com/gamescriptai/rust-adyen/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A comprehensive, type-safe Rust library for Adyen's payment processing APIs. This library provides complete payment functionality with modern Rust patterns, implementing 9 major APIs with comprehensive webhook support and high test coverage.
+A comprehensive, type-safe Rust library for Adyen's payment processing APIs. This library provides essential payment functionality with modern Rust patterns, implementing **8 complete APIs** with comprehensive webhook support and high test coverage.
 
 ## 🚀 Features
 
@@ -32,13 +32,13 @@ A comprehensive, type-safe Rust library for Adyen's payment processing APIs. Thi
 | **Balance Platform** | v2 | ✅ Complete | 18/18 | ✅ 14 tests | Marketplace operations |
 | **Legal Entity** | v3 | ✅ Complete | 26/26 | ✅ 15 tests | KYC and onboarding |
 | **Webhooks** | v1 | ✅ Complete | N/A | ✅ 15 tests | HMAC validation, all event types |
-| **Transfers** | v4 | ⏸️ Deferred | 0/3 | - | Fund transfers (90 models) |
-| **Disputes** | v30 | ⏸️ Deferred | 0/1 | - | Chargeback handling |
-| **Bin Lookup** | v54 | ⏸️ Deferred | 0/1 | - | Card BIN information |
-| **Data Protection** | v1 | ⏸️ Deferred | 0/1 | - | GDPR compliance |
-| **Stored Value** | v46 | ⏸️ Deferred | 0/1 | - | Gift cards and prepaid |
+| **Transfers** | v4 | 📋 Placeholder | 0/0 | - | Fund transfers (not implemented) |
+| **Disputes** | v30 | 📋 Placeholder | 0/0 | - | Chargeback handling (not implemented) |
+| **Bin Lookup** | v54 | 📋 Placeholder | 0/0 | - | Card BIN information (not implemented) |
+| **Data Protection** | v1 | 📋 Placeholder | 0/0 | - | GDPR compliance (not implemented) |
+| **Stored Value** | v46 | 📋 Placeholder | 0/0 | - | Gift cards and prepaid (not implemented) |
 
-**Summary**: 9/14 major APIs complete • 220+ tests passing • All payment workflows 100% complete
+**Summary**: 8/14 major APIs complete • 113 endpoints implemented • Core payment workflows 100% complete
 
 ## 🏗️ Workspace Structure
 
@@ -53,8 +53,8 @@ rust-adyen/
 ├── adyen-platform/       # ✅ Platform operations (18/18 endpoints)
 ├── adyen-legal-entity/  # ✅ KYC/onboarding (100% Go parity)
 ├── adyen-webhooks/      # ✅ Webhook processing (HMAC validation)
-├── adyen-transfers/     # ⏸️ Fund transfers (deferred)
-├── adyen-disputes/      # ⏸️ Chargeback handling (deferred)
+├── adyen-transfers/     # 📋 Fund transfers (placeholder only)
+├── adyen-disputes/      # 📋 Chargeback handling (placeholder only)
 └── examples/           # Usage examples
 ```
 
@@ -72,10 +72,13 @@ adyen-payments = "0.1"   # Classic authorization (13 endpoints)
 adyen-payout = "0.1"     # Fund disbursement (6 endpoints)
 adyen-webhooks = "0.1"   # Webhook processing (HMAC validation)
 
-# Platform APIs (complete core functionality)
+# Platform APIs (core functionality implemented)
 adyen-management = "0.1" # Account/terminal management (20 endpoints)
 adyen-platform = "0.1"   # Balance platform operations (18 endpoints)
 adyen-legal-entity = "0.1" # KYC and onboarding (26 endpoints)
+
+# Note: Transfers, Disputes, Bin Lookup, Data Protection, and Stored Value
+# APIs are placeholder crates and not yet implemented
 
 tokio = { version = "1.0", features = ["full"] }
 ```
@@ -265,9 +268,9 @@ match result {
 
 ## 🎯 Validation Status
 
-**✅ 100% VALIDATED AGAINST OFFICIAL ADYEN GO LIBRARY**
+**✅ CORE APIS VALIDATED AGAINST OFFICIAL ADYEN GO LIBRARY**
 
-This library has been comprehensively validated for **production readiness** through systematic comparison with the official Adyen Go library:
+The 8 implemented APIs have been systematically validated through comparison with the official Adyen Go library:
 
 ### **Core Payment APIs - Perfect Parity Confirmed**
 - **Recurring v68**: ✅ 6/6 endpoints exact match with identical URL patterns `/pal/servlet/Recurring/v68/*`
@@ -286,11 +289,11 @@ This library has been comprehensively validated for **production readiness** thr
 - **✅ URL Patterns**: All endpoint URLs match official Adyen API specifications
 - **✅ Webhook HMAC**: Complete SHA-256 validation with 922 lines of robust implementation
 
-**Result**: This library provides **production-grade coverage** of all essential Adyen payment platform capabilities with verified Go library compatibility.
+**Result**: The implemented APIs provide **production-grade coverage** of core Adyen payment platform capabilities with verified Go library compatibility. Note that 5 APIs remain as placeholder crates.
 
 ## 🚧 Development Status
 
-This library is production-ready for all payment operations:
+This library is production-ready for core payment operations:
 
 **✅ Completed (Production Ready) - 17,000+ lines:**
 
@@ -307,13 +310,17 @@ This library is production-ready for all payment operations:
 - **Legal Entity v3**: KYC, onboarding, and compliance - 26/26 endpoints
 - **Webhooks v1**: Complete HMAC validation with all event types (922 lines)
 
-**🚧 In Progress:**
-- None - All 9 major APIs completed and production-ready
+**🚧 Not Yet Implemented:**
+- **Transfers v4**: Fund transfers and splitting (placeholder only)
+- **Disputes v30**: Chargeback and dispute management (placeholder only)
+- **Bin Lookup v54**: Card BIN information (placeholder only)
+- **Data Protection v1**: GDPR compliance (placeholder only)
+- **Stored Value v46**: Gift cards and prepaid (placeholder only)
 
-**📋 Deferred APIs (Future Enhancement):**
-- Transfers v4: Advanced fund movement and splitting
-- Disputes v30: Chargeback and dispute management
-- Additional utility APIs (Bin Lookup, Data Protection, Stored Value)
+**📋 Future Development:**
+- Implementation of the 5 placeholder APIs listed above
+- Additional specialized endpoints for platform APIs
+- Enhanced testing and integration examples
 
 ## 🧪 Testing
 
