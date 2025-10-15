@@ -1,7 +1,7 @@
 //! Balance Platform API client implementation.
 
-use adyen_core::{Client, Config, Result};
 use crate::types::*;
+use adyen_core::{Client, Config, Result};
 
 /// Adyen Balance Platform API client.
 ///
@@ -69,8 +69,17 @@ impl BalancePlatformApi {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn create_balance_account(&self, request: &CreateBalanceAccountRequest) -> Result<BalanceAccount> {
-        let url = format!("{}/v2/balanceAccounts", self.client.config().environment().balance_platform_api_url());
+    pub async fn create_balance_account(
+        &self,
+        request: &CreateBalanceAccountRequest,
+    ) -> Result<BalanceAccount> {
+        let url = format!(
+            "{}/v2/balanceAccounts",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -83,7 +92,14 @@ impl BalancePlatformApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_balance_account(&self, balance_account_id: &str) -> Result<BalanceAccount> {
-        let url = format!("{}/v2/balanceAccounts/{}", self.client.config().environment().balance_platform_api_url(), balance_account_id);
+        let url = format!(
+            "{}/v2/balanceAccounts/{}",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            balance_account_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -95,8 +111,19 @@ impl BalancePlatformApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn update_balance_account(&self, balance_account_id: &str, request: &CreateBalanceAccountRequest) -> Result<BalanceAccount> {
-        let url = format!("{}/v2/balanceAccounts/{}", self.client.config().environment().balance_platform_api_url(), balance_account_id);
+    pub async fn update_balance_account(
+        &self,
+        balance_account_id: &str,
+        request: &CreateBalanceAccountRequest,
+    ) -> Result<BalanceAccount> {
+        let url = format!(
+            "{}/v2/balanceAccounts/{}",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            balance_account_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -109,7 +136,14 @@ impl BalancePlatformApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn close_balance_account(&self, balance_account_id: &str) -> Result<BalanceAccount> {
-        let url = format!("{}/v2/balanceAccounts/{}/close", self.client.config().environment().balance_platform_api_url(), balance_account_id);
+        let url = format!(
+            "{}/v2/balanceAccounts/{}/close",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            balance_account_id
+        );
         let response = self.client.post(&url, &serde_json::json!({})).await?;
         Ok(response.data)
     }
@@ -121,9 +155,20 @@ impl BalancePlatformApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn list_balance_accounts(&self, account_holder_id: &str) -> Result<Vec<BalanceAccount>> {
-        let url = format!("{}/v2/accountHolders/{}/balanceAccounts", self.client.config().environment().balance_platform_api_url(), account_holder_id);
-        let response: adyen_core::ApiResponse<PaginatedResponse<BalanceAccount>> = self.client.get(&url).await?;
+    pub async fn list_balance_accounts(
+        &self,
+        account_holder_id: &str,
+    ) -> Result<Vec<BalanceAccount>> {
+        let url = format!(
+            "{}/v2/accountHolders/{}/balanceAccounts",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            account_holder_id
+        );
+        let response: adyen_core::ApiResponse<PaginatedResponse<BalanceAccount>> =
+            self.client.get(&url).await?;
         Ok(response.data.data)
     }
 
@@ -138,8 +183,17 @@ impl BalancePlatformApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn create_account_holder(&self, request: &CreateAccountHolderRequest) -> Result<AccountHolder> {
-        let url = format!("{}/v2/accountHolders", self.client.config().environment().balance_platform_api_url());
+    pub async fn create_account_holder(
+        &self,
+        request: &CreateAccountHolderRequest,
+    ) -> Result<AccountHolder> {
+        let url = format!(
+            "{}/v2/accountHolders",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -152,7 +206,14 @@ impl BalancePlatformApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_account_holder(&self, account_holder_id: &str) -> Result<AccountHolder> {
-        let url = format!("{}/v2/accountHolders/{}", self.client.config().environment().balance_platform_api_url(), account_holder_id);
+        let url = format!(
+            "{}/v2/accountHolders/{}",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            account_holder_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -164,8 +225,19 @@ impl BalancePlatformApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn update_account_holder(&self, account_holder_id: &str, request: &CreateAccountHolderRequest) -> Result<AccountHolder> {
-        let url = format!("{}/v2/accountHolders/{}", self.client.config().environment().balance_platform_api_url(), account_holder_id);
+    pub async fn update_account_holder(
+        &self,
+        account_holder_id: &str,
+        request: &CreateAccountHolderRequest,
+    ) -> Result<AccountHolder> {
+        let url = format!(
+            "{}/v2/accountHolders/{}",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            account_holder_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -178,8 +250,15 @@ impl BalancePlatformApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn list_account_holders(&self) -> Result<Vec<AccountHolder>> {
-        let url = format!("{}/v2/accountHolders", self.client.config().environment().balance_platform_api_url());
-        let response: adyen_core::ApiResponse<PaginatedResponse<AccountHolder>> = self.client.get(&url).await?;
+        let url = format!(
+            "{}/v2/accountHolders",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url()
+        );
+        let response: adyen_core::ApiResponse<PaginatedResponse<AccountHolder>> =
+            self.client.get(&url).await?;
         Ok(response.data.data)
     }
 
@@ -194,8 +273,17 @@ impl BalancePlatformApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn create_payment_instrument(&self, request: &CreatePaymentInstrumentRequest) -> Result<PaymentInstrument> {
-        let url = format!("{}/v2/paymentInstruments", self.client.config().environment().balance_platform_api_url());
+    pub async fn create_payment_instrument(
+        &self,
+        request: &CreatePaymentInstrumentRequest,
+    ) -> Result<PaymentInstrument> {
+        let url = format!(
+            "{}/v2/paymentInstruments",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -207,8 +295,18 @@ impl BalancePlatformApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn get_payment_instrument(&self, payment_instrument_id: &str) -> Result<PaymentInstrument> {
-        let url = format!("{}/v2/paymentInstruments/{}", self.client.config().environment().balance_platform_api_url(), payment_instrument_id);
+    pub async fn get_payment_instrument(
+        &self,
+        payment_instrument_id: &str,
+    ) -> Result<PaymentInstrument> {
+        let url = format!(
+            "{}/v2/paymentInstruments/{}",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            payment_instrument_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -220,8 +318,19 @@ impl BalancePlatformApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn update_payment_instrument(&self, payment_instrument_id: &str, request: &CreatePaymentInstrumentRequest) -> Result<PaymentInstrument> {
-        let url = format!("{}/v2/paymentInstruments/{}", self.client.config().environment().balance_platform_api_url(), payment_instrument_id);
+    pub async fn update_payment_instrument(
+        &self,
+        payment_instrument_id: &str,
+        request: &CreatePaymentInstrumentRequest,
+    ) -> Result<PaymentInstrument> {
+        let url = format!(
+            "{}/v2/paymentInstruments/{}",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            payment_instrument_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -233,9 +342,20 @@ impl BalancePlatformApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn list_payment_instruments(&self, balance_account_id: &str) -> Result<Vec<PaymentInstrument>> {
-        let url = format!("{}/v2/balanceAccounts/{}/paymentInstruments", self.client.config().environment().balance_platform_api_url(), balance_account_id);
-        let response: adyen_core::ApiResponse<PaginatedResponse<PaymentInstrument>> = self.client.get(&url).await?;
+    pub async fn list_payment_instruments(
+        &self,
+        balance_account_id: &str,
+    ) -> Result<Vec<PaymentInstrument>> {
+        let url = format!(
+            "{}/v2/balanceAccounts/{}/paymentInstruments",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            balance_account_id
+        );
+        let response: adyen_core::ApiResponse<PaginatedResponse<PaymentInstrument>> =
+            self.client.get(&url).await?;
         Ok(response.data.data)
     }
 
@@ -250,8 +370,17 @@ impl BalancePlatformApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn create_transaction_rule(&self, request: &CreateTransactionRuleRequest) -> Result<TransactionRule> {
-        let url = format!("{}/v2/transactionRules", self.client.config().environment().balance_platform_api_url());
+    pub async fn create_transaction_rule(
+        &self,
+        request: &CreateTransactionRuleRequest,
+    ) -> Result<TransactionRule> {
+        let url = format!(
+            "{}/v2/transactionRules",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -264,7 +393,14 @@ impl BalancePlatformApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_transaction_rule(&self, transaction_rule_id: &str) -> Result<TransactionRule> {
-        let url = format!("{}/v2/transactionRules/{}", self.client.config().environment().balance_platform_api_url(), transaction_rule_id);
+        let url = format!(
+            "{}/v2/transactionRules/{}",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            transaction_rule_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -276,8 +412,19 @@ impl BalancePlatformApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn update_transaction_rule(&self, transaction_rule_id: &str, request: &CreateTransactionRuleRequest) -> Result<TransactionRule> {
-        let url = format!("{}/v2/transactionRules/{}", self.client.config().environment().balance_platform_api_url(), transaction_rule_id);
+    pub async fn update_transaction_rule(
+        &self,
+        transaction_rule_id: &str,
+        request: &CreateTransactionRuleRequest,
+    ) -> Result<TransactionRule> {
+        let url = format!(
+            "{}/v2/transactionRules/{}",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            transaction_rule_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -290,7 +437,14 @@ impl BalancePlatformApi {
     ///
     /// Returns an error if the request fails.
     pub async fn delete_transaction_rule(&self, transaction_rule_id: &str) -> Result<()> {
-        let url = format!("{}/v2/transactionRules/{}", self.client.config().environment().balance_platform_api_url(), transaction_rule_id);
+        let url = format!(
+            "{}/v2/transactionRules/{}",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            transaction_rule_id
+        );
         self.client.delete(&url).await?;
         Ok(())
     }
@@ -302,10 +456,22 @@ impl BalancePlatformApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn list_transaction_rules(&self, entity_type: &str, entity_id: &str) -> Result<Vec<TransactionRule>> {
-        let url = format!("{}/v2/transactionRules?entityType={}&entityId={}",
-            self.client.config().environment().balance_platform_api_url(), entity_type, entity_id);
-        let response: adyen_core::ApiResponse<PaginatedResponse<TransactionRule>> = self.client.get(&url).await?;
+    pub async fn list_transaction_rules(
+        &self,
+        entity_type: &str,
+        entity_id: &str,
+    ) -> Result<Vec<TransactionRule>> {
+        let url = format!(
+            "{}/v2/transactionRules?entityType={}&entityId={}",
+            self.client
+                .config()
+                .environment()
+                .balance_platform_api_url(),
+            entity_type,
+            entity_id
+        );
+        let response: adyen_core::ApiResponse<PaginatedResponse<TransactionRule>> =
+            self.client.get(&url).await?;
         Ok(response.data.data)
     }
 }

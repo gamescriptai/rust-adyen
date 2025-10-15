@@ -58,10 +58,10 @@ impl Client {
         for (name, value) in config.default_headers() {
             let header_name =
                 reqwest::header::HeaderName::from_bytes(name.as_bytes()).map_err(|e| {
-                    crate::AdyenError::config(format!("Invalid header name '{}': {}", name, e))
+                    crate::AdyenError::config(format!("Invalid header name '{name}': {e}"))
                 })?;
             let header_value = reqwest::header::HeaderValue::from_str(value).map_err(|e| {
-                crate::AdyenError::config(format!("Invalid header value '{}': {}", value, e))
+                crate::AdyenError::config(format!("Invalid header value '{value}': {e}"))
             })?;
             headers.insert(header_name, header_value);
         }
@@ -70,7 +70,7 @@ impl Client {
         headers.insert(
             reqwest::header::USER_AGENT,
             reqwest::header::HeaderValue::from_str(config.user_agent())
-                .map_err(|e| crate::AdyenError::config(format!("Invalid user agent: {}", e)))?,
+                .map_err(|e| crate::AdyenError::config(format!("Invalid user agent: {e}")))?,
         );
 
         // Add Content-Type
@@ -89,9 +89,7 @@ impl Client {
             .default_headers(headers)
             .https_only(true)
             .build()
-            .map_err(|e| {
-                crate::AdyenError::config(format!("Failed to create HTTP client: {}", e))
-            })?;
+            .map_err(|e| crate::AdyenError::config(format!("Failed to create HTTP client: {e}")))?;
 
         Ok(Self {
             config,
@@ -248,7 +246,7 @@ impl Client {
         };
 
         // Add authentication
-        req_builder = self.add_authentication(req_builder)?;
+        req_builder = self.add_authentication(req_builder);
 
         // Add custom headers
         for (name, value) in &request.headers {
@@ -271,7 +269,7 @@ impl Client {
     }
 
     /// Add authentication headers to the request.
-    fn add_authentication(&self, mut req_builder: RequestBuilder) -> Result<RequestBuilder> {
+    fn add_authentication(&self, mut req_builder: RequestBuilder) -> RequestBuilder {
         match self.config.credentials() {
             Credentials::ApiKey(api_key) => {
                 req_builder = req_builder.header("X-API-Key", api_key.as_str());
@@ -281,10 +279,10 @@ impl Client {
                     req_builder.header("Authorization", basic_auth.authorization_header());
             }
         }
-        Ok(req_builder)
+        req_builder
     }
 
-    /// Handle the HTTP response and convert to ApiResponse.
+    /// Handle the HTTP response and convert to `ApiResponse`.
     async fn handle_response<T>(&self, response: Response) -> Result<ApiResponse<T>>
     where
         T: for<'de> Deserialize<'de>,
@@ -296,7 +294,7 @@ impl Client {
         let psp_reference = headers
             .get("psp-reference")
             .and_then(|v| v.to_str().ok())
-            .map(|s| s.to_string());
+            .map(std::string::ToString::to_string);
 
         let response_text = response.text().await?;
 
@@ -308,14 +306,14 @@ impl Client {
 
         // Handle error responses
         if status >= 400 {
-            let api_error = self.parse_api_error(&response_text, status, psp_reference)?;
+            let api_error = self.parse_api_error(&response_text, status, psp_reference);
             return Err(api_error);
         }
 
         // Parse successful response
         let data: T = serde_json::from_str(&response_text).map_err(|e| {
             AdyenError::generic_with_source(
-                format!("Failed to parse response: {}", response_text),
+                format!("Failed to parse response: {response_text}"),
                 Box::new(e),
             )
         })?;
@@ -329,12 +327,13 @@ impl Client {
     }
 
     /// Parse API error from response text.
+    #[allow(clippy::unused_self)]
     fn parse_api_error(
         &self,
         response_text: &str,
         status: u16,
         psp_reference: Option<String>,
-    ) -> Result<AdyenError> {
+    ) -> AdyenError {
         // Try to parse structured error response
         #[derive(Deserialize)]
         #[serde(rename_all = "camelCase")]
@@ -347,7 +346,7 @@ impl Client {
         }
 
         match serde_json::from_str::<ErrorResponse>(response_text) {
-            Ok(error_resp) => Ok(AdyenError::api(
+            Ok(error_resp) => AdyenError::api(
                 error_resp.status.unwrap_or(status),
                 error_resp
                     .error_code
@@ -359,16 +358,16 @@ impl Client {
                     .error_type
                     .unwrap_or_else(|| "UNKNOWN".to_string()),
                 error_resp.psp_reference.or(psp_reference),
-            )),
+            ),
             Err(_) => {
                 // Fallback for non-structured errors
-                Ok(AdyenError::api(
+                AdyenError::api(
                     status,
-                    format!("HTTP_{}", status),
+                    format!("HTTP_{status}"),
                     response_text.to_string(),
                     "HTTP_ERROR".to_string(),
                     psp_reference,
-                ))
+                )
             }
         }
     }

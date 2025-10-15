@@ -1,11 +1,11 @@
 //! Integration tests for the Adyen Balance Platform API v2.
 
 use adyen_core::{ConfigBuilder, Environment};
-use adyen_platform::{
-    BalancePlatformApi, CreateBalanceAccountRequest, CreateAccountHolderRequest,
-    CreatePaymentInstrumentRequest, CreateTransactionRuleRequest
-};
 use adyen_platform::types::*;
+use adyen_platform::{
+    BalancePlatformApi, CreateAccountHolderRequest, CreateBalanceAccountRequest,
+    CreatePaymentInstrumentRequest, CreateTransactionRuleRequest,
+};
 use std::collections::HashMap;
 
 fn create_test_config() -> adyen_core::Config {
@@ -37,11 +37,20 @@ mod request_building_tests {
             .unwrap();
 
         assert_eq!(request.account_holder_id.as_ref(), "AH12345");
-        assert_eq!(request.description.as_ref().unwrap().as_ref(), "Main balance account");
+        assert_eq!(
+            request.description.as_ref().unwrap().as_ref(),
+            "Main balance account"
+        );
         assert_eq!(request.reference.as_ref().unwrap().as_ref(), "BA_001");
-        assert_eq!(request.default_currency_code.as_ref().unwrap().as_ref(), "EUR");
+        assert_eq!(
+            request.default_currency_code.as_ref().unwrap().as_ref(),
+            "EUR"
+        );
         assert!(request.metadata.is_some());
-        assert_eq!(request.time_zone.as_ref().unwrap().as_ref(), "Europe/Amsterdam");
+        assert_eq!(
+            request.time_zone.as_ref().unwrap().as_ref(),
+            "Europe/Amsterdam"
+        );
     }
 
     #[test]
@@ -133,7 +142,10 @@ mod request_building_tests {
             outcome_type: OutcomeType::HardBlock,
         };
 
-        assert_eq!(request.description.as_ref().unwrap().as_ref(), "Daily spending limit");
+        assert_eq!(
+            request.description.as_ref().unwrap().as_ref(),
+            "Daily spending limit"
+        );
         assert!(matches!(request.r#type, TransactionRuleType::Velocity));
         assert!(matches!(request.outcome_type, OutcomeType::HardBlock));
     }
@@ -219,11 +231,26 @@ mod serialization_tests {
 
     #[test]
     fn test_enum_serialization() {
-        assert_eq!(serde_json::to_string(&BalanceAccountStatus::Active).unwrap(), "\"active\"");
-        assert_eq!(serde_json::to_string(&PaymentInstrumentType::Card).unwrap(), "\"card\"");
-        assert_eq!(serde_json::to_string(&CardFormFactor::Virtual).unwrap(), "\"virtual\"");
-        assert_eq!(serde_json::to_string(&TransactionRuleType::Velocity).unwrap(), "\"velocity\"");
-        assert_eq!(serde_json::to_string(&OutcomeType::HardBlock).unwrap(), "\"hardBlock\"");
+        assert_eq!(
+            serde_json::to_string(&BalanceAccountStatus::Active).unwrap(),
+            "\"active\""
+        );
+        assert_eq!(
+            serde_json::to_string(&PaymentInstrumentType::Card).unwrap(),
+            "\"card\""
+        );
+        assert_eq!(
+            serde_json::to_string(&CardFormFactor::Virtual).unwrap(),
+            "\"virtual\""
+        );
+        assert_eq!(
+            serde_json::to_string(&TransactionRuleType::Velocity).unwrap(),
+            "\"velocity\""
+        );
+        assert_eq!(
+            serde_json::to_string(&OutcomeType::HardBlock).unwrap(),
+            "\"hardBlock\""
+        );
     }
 }
 
@@ -236,7 +263,10 @@ mod validation_tests {
         // Missing required account_holder_id should fail
         let result = CreateBalanceAccountRequest::builder().build();
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err().as_ref(), "account_holder_id is required");
+        assert_eq!(
+            result.unwrap_err().as_ref(),
+            "account_holder_id is required"
+        );
     }
 
     #[test]
@@ -355,9 +385,18 @@ mod workflow_tests {
         // Verify the workflow relationships
         assert_eq!(balance_account.account_holder.id, account_holder.id);
         assert_eq!(payment_instrument.balance_account_id, balance_account.id);
-        assert_eq!(transaction_rule.entity_key.entity_reference, balance_account.id);
-        assert!(matches!(payment_instrument.r#type, PaymentInstrumentType::Card));
-        assert!(matches!(transaction_rule.outcome_type, OutcomeType::HardBlock));
+        assert_eq!(
+            transaction_rule.entity_key.entity_reference,
+            balance_account.id
+        );
+        assert!(matches!(
+            payment_instrument.r#type,
+            PaymentInstrumentType::Card
+        ));
+        assert!(matches!(
+            transaction_rule.outcome_type,
+            OutcomeType::HardBlock
+        ));
     }
 
     #[test]
@@ -495,9 +534,15 @@ mod workflow_tests {
         // Verify comprehensive restrictions
         assert!(comprehensive_rule.rule_restrictions.max_amount.is_some());
         assert!(comprehensive_rule.rule_restrictions.velocity.is_some());
-        assert!(comprehensive_rule.rule_restrictions.processing_types.is_some());
+        assert!(comprehensive_rule
+            .rule_restrictions
+            .processing_types
+            .is_some());
         assert!(comprehensive_rule.rule_restrictions.time_period.is_some());
-        assert!(matches!(comprehensive_rule.outcome_type, OutcomeType::AdviseOnly));
+        assert!(matches!(
+            comprehensive_rule.outcome_type,
+            OutcomeType::AdviseOnly
+        ));
     }
 }
 
@@ -511,5 +556,4 @@ mod api_tests {
         let _api = BalancePlatformApi::new(config).unwrap();
         // API created successfully indicates proper configuration
     }
-
 }

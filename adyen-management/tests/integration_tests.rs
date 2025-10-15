@@ -1,12 +1,12 @@
 //! Integration tests for the Adyen Management API v3.
 
 use adyen_core::{ConfigBuilder, Environment};
-use adyen_management::{
-    ManagementApi, CreateMerchantRequest, CreateStoreRequest, CreateWebhookRequest,
-    UpdatePaymentMethodRequest
-};
 use adyen_management::types::{
-    BusinessDetails, Contact, Address, MerchantStatus, StoreStatus, TerminalStatus
+    Address, BusinessDetails, Contact, MerchantStatus, StoreStatus, TerminalStatus,
+};
+use adyen_management::{
+    CreateMerchantRequest, CreateStoreRequest, CreateWebhookRequest, ManagementApi,
+    UpdatePaymentMethodRequest,
 };
 
 fn create_test_config() -> adyen_core::Config {
@@ -59,7 +59,10 @@ mod request_building_tests {
 
         assert_eq!(&*request.company_id, "company_123");
         assert_eq!(&*request.merchant_account, "ExampleMerchant");
-        assert_eq!(&*request.business_details.legal_business_name, "Example Corp");
+        assert_eq!(
+            &*request.business_details.legal_business_name,
+            "Example Corp"
+        );
         assert_eq!(&*request.primary_contact.email, "contact@example.com");
         assert!(request.billing_address.is_some());
     }
@@ -88,7 +91,10 @@ mod request_building_tests {
         assert_eq!(&*request.description, "Main Store Location");
         assert_eq!(&*request.address.city, "Los Angeles");
         assert_eq!(request.phone_number.as_deref(), Some("+1987654321"));
-        assert_eq!(request.business_line_id.as_deref(), Some("business_line_123"));
+        assert_eq!(
+            request.business_line_id.as_deref(),
+            Some("business_line_123")
+        );
     }
 
     #[test]
@@ -103,7 +109,10 @@ mod request_building_tests {
         };
 
         assert_eq!(&*request.url, "https://example.com/webhook");
-        assert_eq!(request.description.as_deref(), Some("Payment notifications"));
+        assert_eq!(
+            request.description.as_deref(),
+            Some("Payment notifications")
+        );
         assert!(request.active);
         assert_eq!(&*request.communication_format, "json");
         assert_eq!(request.filter_merchant_accounts.as_ref().unwrap().len(), 1);
@@ -153,7 +162,6 @@ mod api_tests {
 #[cfg(test)]
 mod serialization_tests {
     use super::*;
-    use serde_json;
 
     #[test]
     fn test_create_merchant_request_serialization() {
@@ -185,7 +193,10 @@ mod serialization_tests {
 
         assert_eq!(request.company_id, deserialized.company_id);
         assert_eq!(request.merchant_account, deserialized.merchant_account);
-        assert_eq!(request.business_details.legal_business_name, deserialized.business_details.legal_business_name);
+        assert_eq!(
+            request.business_details.legal_business_name,
+            deserialized.business_details.legal_business_name
+        );
     }
 
     #[test]
@@ -231,7 +242,10 @@ mod serialization_tests {
         assert_eq!(request.url, deserialized.url);
         assert_eq!(request.description, deserialized.description);
         assert_eq!(request.active, deserialized.active);
-        assert_eq!(request.communication_format, deserialized.communication_format);
+        assert_eq!(
+            request.communication_format,
+            deserialized.communication_format
+        );
     }
 
     #[test]
@@ -435,11 +449,20 @@ mod workflow_tests {
         assert_eq!(&*create_merchant_request.company_id, "company_global_001");
         assert_eq!(&*create_store_request.store_reference, "global_store_001");
         assert_eq!(&*payment_method_request.r#type, "scheme");
-        assert_eq!(&*webhook_request.url, "https://globalstore.example.com/adyen/webhook");
+        assert_eq!(
+            &*webhook_request.url,
+            "https://globalstore.example.com/adyen/webhook"
+        );
 
         // Verify relationships are consistent
-        assert_eq!(&*create_merchant_request.merchant_account, "GlobalStoreMerchant");
-        assert_eq!(webhook_request.filter_merchant_accounts.as_ref().unwrap()[0], create_merchant_request.merchant_account);
+        assert_eq!(
+            &*create_merchant_request.merchant_account,
+            "GlobalStoreMerchant"
+        );
+        assert_eq!(
+            webhook_request.filter_merchant_accounts.as_ref().unwrap()[0],
+            create_merchant_request.merchant_account
+        );
     }
 
     /// Test the terminal management workflow:
@@ -451,8 +474,12 @@ mod workflow_tests {
         // This test validates the type structures for terminal management
         // In practice, these would be API responses, but we're testing type correctness
 
-        use adyen_management::types::{TerminalModel, TerminalSettings, Terminal, TerminalAssignment};
-        use adyen_management::types::{CardAcquisitionSettings, ConnectivitySettings, ReceiptOptions};
+        use adyen_management::types::{
+            CardAcquisitionSettings, ConnectivitySettings, ReceiptOptions,
+        };
+        use adyen_management::types::{
+            Terminal, TerminalAssignment, TerminalModel, TerminalSettings,
+        };
 
         // Terminal model information
         let terminal_model = TerminalModel {
@@ -500,7 +527,10 @@ mod workflow_tests {
         assert!(terminal_model.contactless.unwrap());
         assert!(terminal_settings.card_acquisition.is_some());
         assert_eq!(&*terminal.serial_number, "123-456-789");
-        assert_eq!(terminal.assignment.as_ref().unwrap().store_id.as_deref(), Some("global_store_001"));
+        assert_eq!(
+            terminal.assignment.as_ref().unwrap().store_id.as_deref(),
+            Some("global_store_001")
+        );
     }
 
     /// Test the webhook management workflow:
@@ -509,8 +539,8 @@ mod workflow_tests {
     /// 3. Test webhook filtering
     #[test]
     fn test_webhook_management_workflow_types() {
-        use adyen_management::{UpdateWebhookRequest};
         use adyen_management::types::{Webhook, WebhookAdditionalSettings};
+        use adyen_management::UpdateWebhookRequest;
         use std::collections::HashMap;
 
         // Initial webhook creation
@@ -571,14 +601,47 @@ mod workflow_tests {
         };
 
         // Verify webhook workflow progression
-        assert_eq!(&*create_request.url, "https://api.merchant.com/webhooks/adyen");
-        assert_eq!(create_request.filter_merchant_accounts.as_ref().unwrap().len(), 2);
+        assert_eq!(
+            &*create_request.url,
+            "https://api.merchant.com/webhooks/adyen"
+        );
+        assert_eq!(
+            create_request
+                .filter_merchant_accounts
+                .as_ref()
+                .unwrap()
+                .len(),
+            2
+        );
 
-        assert_eq!(update_request.url.as_deref(), Some("https://api.merchant.com/webhooks/adyen/v2"));
-        assert_eq!(update_request.filter_merchant_accounts.as_ref().unwrap().len(), 1);
+        assert_eq!(
+            update_request.url.as_deref(),
+            Some("https://api.merchant.com/webhooks/adyen/v2")
+        );
+        assert_eq!(
+            update_request
+                .filter_merchant_accounts
+                .as_ref()
+                .unwrap()
+                .len(),
+            1
+        );
 
-        assert_eq!(&*webhook_response.url, "https://api.merchant.com/webhooks/adyen/v2");
+        assert_eq!(
+            &*webhook_response.url,
+            "https://api.merchant.com/webhooks/adyen/v2"
+        );
         assert_eq!(webhook_response.filter_merchant_accounts.len(), 1);
-        assert_eq!(webhook_response.additional_settings.as_ref().unwrap().include_event_codes.as_ref().unwrap().len(), 3);
+        assert_eq!(
+            webhook_response
+                .additional_settings
+                .as_ref()
+                .unwrap()
+                .include_event_codes
+                .as_ref()
+                .unwrap()
+                .len(),
+            3
+        );
     }
 }

@@ -1,6 +1,6 @@
 //! Payment request and response types.
 
-use adyen_core::{Amount, AdyenError, Result};
+use adyen_core::{AdyenError, Amount, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -89,10 +89,10 @@ pub enum PaymentMethodDetails {
         holder_name: Option<String>,
     },
 
-    /// PayPal payment.
+    /// `PayPal` payment.
     #[serde(rename = "paypal")]
     PayPal {
-        /// The PayPal payer ID.
+        /// The `PayPal` payer ID.
         #[serde(skip_serializing_if = "Option::is_none")]
         payer_id: Option<String>,
     },
@@ -496,13 +496,17 @@ impl PaymentRequestBuilder {
     ///
     /// Returns an error if required fields are not set.
     pub fn build(self) -> Result<PaymentRequest> {
-        let amount = self.amount
+        let amount = self
+            .amount
             .ok_or_else(|| AdyenError::config("amount is required"))?;
-        let merchant_account = self.merchant_account
+        let merchant_account = self
+            .merchant_account
             .ok_or_else(|| AdyenError::config("merchant_account is required"))?;
-        let reference = self.reference
+        let reference = self
+            .reference
             .ok_or_else(|| AdyenError::config("reference is required"))?;
-        let return_url = self.return_url
+        let return_url = self
+            .return_url
             .ok_or_else(|| AdyenError::config("return_url is required"))?;
 
         Ok(PaymentRequest {
@@ -566,10 +570,7 @@ mod tests {
         assert!(PaymentRequest::builder().build().is_err());
 
         let amount = Amount::from_major_units(100, Currency::EUR);
-        assert!(PaymentRequest::builder()
-            .amount(amount)
-            .build()
-            .is_err());
+        assert!(PaymentRequest::builder().amount(amount).build().is_err());
     }
 
     #[test]

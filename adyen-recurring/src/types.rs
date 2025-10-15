@@ -2,7 +2,7 @@
 //!
 //! This module contains all request and response types for recurring payment operations.
 
-use adyen_core::{Amount, AdyenError, Result};
+use adyen_core::{AdyenError, Amount, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -261,9 +261,11 @@ impl RecurringDetailsRequestBuilder {
 
     /// Build the RecurringDetailsRequest.
     pub fn build(self) -> Result<RecurringDetailsRequest> {
-        let merchant_account = self.merchant_account
+        let merchant_account = self
+            .merchant_account
             .ok_or_else(|| AdyenError::generic("merchant_account is required"))?;
-        let shopper_reference = self.shopper_reference
+        let shopper_reference = self
+            .shopper_reference
             .ok_or_else(|| AdyenError::generic("shopper_reference is required"))?;
 
         Ok(RecurringDetailsRequest {
@@ -310,9 +312,11 @@ impl DisableRequestBuilder {
 
     /// Build the DisableRequest.
     pub fn build(self) -> Result<DisableRequest> {
-        let merchant_account = self.merchant_account
+        let merchant_account = self
+            .merchant_account
             .ok_or_else(|| AdyenError::generic("merchant_account is required"))?;
-        let shopper_reference = self.shopper_reference
+        let shopper_reference = self
+            .shopper_reference
             .ok_or_else(|| AdyenError::generic("shopper_reference is required"))?;
 
         Ok(DisableRequest {

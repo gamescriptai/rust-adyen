@@ -9,6 +9,9 @@ homepage.workspace = true
 documentation.workspace = true
 description = "Adyen Management API v3 for account and terminal management"
 
+[lints]
+workspace = true
+
 [dependencies]
 adyen-core = { path = "../adyen-core" }
 serde = { version = "1.0", features = ["derive"] }

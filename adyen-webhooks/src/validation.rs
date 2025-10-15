@@ -45,7 +45,7 @@ impl HmacValidator {
     /// Returns an error if the secret key is not valid hex.
     pub fn new(secret_key: &str) -> Result<Self, ValidationError> {
         let key = hex::decode(secret_key)
-            .map_err(|e| ValidationError::InvalidKey(format!("Invalid hex key: {}", e)))?;
+            .map_err(|e| ValidationError::InvalidKey(format!("Invalid hex key: {e}")))?;
 
         Ok(Self { secret_key: key })
     }
@@ -62,17 +62,16 @@ impl HmacValidator {
     /// # Returns
     ///
     /// Returns `true` if the signature is valid, `false` otherwise.
+    #[must_use]
     pub fn validate_notification(&self, item: &NotificationRequestItem) -> bool {
         // Get the HMAC signature from additional data
-        let signature = match item.hmac_signature() {
-            Some(sig) => sig,
-            None => return false,
+        let Some(signature) = item.hmac_signature() else {
+            return false;
         };
 
         // Calculate expected signature
-        let expected_signature = match self.calculate_notification_signature(item) {
-            Ok(sig) => sig,
-            Err(_) => return false,
+        let Ok(expected_signature) = self.calculate_notification_signature(item) else {
+            return false;
         };
 
         // Compare signatures
@@ -92,6 +91,7 @@ impl HmacValidator {
     /// # Returns
     ///
     /// Returns `true` if the signature is valid, `false` otherwise.
+    #[must_use]
     pub fn validate_payload(&self, payload: &str, signature: &str) -> bool {
         match self.calculate_payload_signature(payload) {
             Ok(expected_signature) => signature == expected_signature,
@@ -103,6 +103,10 @@ impl HmacValidator {
     ///
     /// This creates the data-to-sign string and calculates the HMAC signature
     /// following Adyen's specification.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if HMAC calculation fails.
     pub fn calculate_notification_signature(
         &self,
         item: &NotificationRequestItem,
@@ -112,6 +116,10 @@ impl HmacValidator {
     }
 
     /// Calculate HMAC signature for a raw payload.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if HMAC calculation fails.
     pub fn calculate_payload_signature(&self, payload: &str) -> Result<String, ValidationError> {
         self.calculate_hmac(payload)
     }
@@ -121,6 +129,7 @@ impl HmacValidator {
     /// This method constructs the canonical string that Adyen uses for HMAC calculation,
     /// following the exact format: pspReference:originalReference:merchantAccountCode:
     /// merchantReference:amount:currency:eventCode:success
+    #[allow(clippy::unused_self)]
     fn get_notification_data_to_sign(&self, item: &NotificationRequestItem) -> String {
         let original_reference = item.original_reference.as_deref().unwrap_or("");
 
@@ -140,7 +149,7 @@ impl HmacValidator {
     /// Calculate HMAC-SHA256 signature for the given data.
     fn calculate_hmac(&self, data: &str) -> Result<String, ValidationError> {
         let mut mac = HmacSha256::new_from_slice(&self.secret_key)
-            .map_err(|e| ValidationError::HmacError(format!("Failed to create HMAC: {}", e)))?;
+            .map_err(|e| ValidationError::HmacError(format!("Failed to create HMAC: {e}")))?;
 
         // Apply escaping for backslashes and colons as per Adyen specification
         let escaped_data = self.escape_data(data);
@@ -155,6 +164,7 @@ impl HmacValidator {
     /// This matches the escaping logic from the Go library:
     /// - Backslashes are escaped as `\\`
     /// - Colons are escaped as `\:`
+    #[allow(clippy::unused_self)]
     fn escape_data(&self, data: &str) -> String {
         data.replace('\\', "\\\\").replace(':', "\\:")
     }
@@ -163,6 +173,7 @@ impl HmacValidator {
     ///
     /// This method is used for webhooks that provide data as key-value pairs
     /// rather than structured notification items.
+    #[must_use]
     pub fn validate_key_value_pairs(
         &self,
         data: &HashMap<String, String>,
@@ -187,21 +198,12 @@ impl HmacValidator {
         let mut keys: Vec<&String> = data.keys().collect();
         keys.sort();
 
-        let escaped_keys: Vec<String> = keys
-            .iter()
-            .map(|k| self.escape_data(k))
-            .collect();
+        let escaped_keys: Vec<String> = keys.iter().map(|k| self.escape_data(k)).collect();
 
-        let escaped_values: Vec<String> = keys
-            .iter()
-            .map(|k| self.escape_data(&data[*k]))
-            .collect();
+        let escaped_values: Vec<String> =
+            keys.iter().map(|k| self.escape_data(&data[*k])).collect();
 
-        let data_to_sign = format!(
-            "{}:{}",
-            escaped_keys.join(":"),
-            escaped_values.join(":")
-        );
+        let data_to_sign = format!("{}:{}", escaped_keys.join(":"), escaped_values.join(":"));
 
         self.calculate_hmac(&data_to_sign)
     }
@@ -210,7 +212,7 @@ impl HmacValidator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::{NotificationRequestItem, Amount};
+    use crate::types::{Amount, NotificationRequestItem};
     use std::collections::HashMap;
 
     const TEST_HMAC_KEY: &str = "44782DEF547AAA06C910C43932B1EB0C71FC68D9D0C057550C48EC2ACF6BA056";
@@ -225,7 +227,10 @@ mod tests {
     fn test_invalid_hmac_key() {
         let result = HmacValidator::new("invalid_hex_key");
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), ValidationError::InvalidKey(_)));
+        assert!(matches!(
+            result.unwrap_err(),
+            ValidationError::InvalidKey(_)
+        ));
     }
 
     #[test]
@@ -295,20 +300,22 @@ mod tests {
         let validator = HmacValidator::new(TEST_HMAC_KEY).unwrap();
 
         let mut additional_data = HashMap::new();
-        let expected_signature = validator.calculate_notification_signature(&NotificationRequestItem {
-            additional_data: None,
-            amount: Amount::new(1000, "EUR"),
-            event_code: "AUTHORISATION".to_string(),
-            event_date: None,
-            merchant_account_code: "TestMerchant".to_string(),
-            merchant_reference: "test-payment-123".to_string(),
-            operations: vec![],
-            original_reference: None,
-            payment_method: "visa".to_string(),
-            psp_reference: "8515131751004933".to_string(),
-            reason: "test".to_string(),
-            success: "true".to_string(),
-        }).unwrap();
+        let expected_signature = validator
+            .calculate_notification_signature(&NotificationRequestItem {
+                additional_data: None,
+                amount: Amount::new(1000, "EUR"),
+                event_code: "AUTHORISATION".to_string(),
+                event_date: None,
+                merchant_account_code: "TestMerchant".to_string(),
+                merchant_reference: "test-payment-123".to_string(),
+                operations: vec![],
+                original_reference: None,
+                payment_method: "visa".to_string(),
+                psp_reference: "8515131751004933".to_string(),
+                reason: "test".to_string(),
+                success: "true".to_string(),
+            })
+            .unwrap();
 
         additional_data.insert(
             "hmacSignature".to_string(),

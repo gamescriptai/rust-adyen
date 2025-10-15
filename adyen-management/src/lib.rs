@@ -2,6 +2,8 @@
 //!
 //! This crate provides access to Adyen's Management API v3 for configuring and managing
 //! your Adyen company and merchant accounts, stores, and payment terminals.
+
+#![allow(clippy::type_complexity)]
 //!
 //! ## Features
 //!
@@ -38,16 +40,28 @@ pub mod types;
 // Re-export main types for convenience
 pub use api::ManagementApi;
 pub use types::{
-    // Company and Merchant types
-    Company, MerchantAccount, CreateMerchantRequest,
-    // Store management
-    Store, CreateStoreRequest, StoreCreationWithMerchantCodeRequest,
-    // Payment methods
-    PaymentMethod, PaymentMethodSettings, UpdatePaymentMethodRequest,
-    // Webhooks
-    Webhook, CreateWebhookRequest, UpdateWebhookRequest,
-    // Terminal management
-    TerminalModel, TerminalSettings, Terminal,
     // Common types
-    Address, Contact, Links,
+    Address,
+    // Company and Merchant types
+    Company,
+    Contact,
+    CreateMerchantRequest,
+    CreateStoreRequest,
+    CreateWebhookRequest,
+    Links,
+    MerchantAccount,
+    // Payment methods
+    PaymentMethod,
+    PaymentMethodSettings,
+    // Store management
+    Store,
+    StoreCreationWithMerchantCodeRequest,
+    Terminal,
+    // Terminal management
+    TerminalModel,
+    TerminalSettings,
+    UpdatePaymentMethodRequest,
+    UpdateWebhookRequest,
+    // Webhooks
+    Webhook,
 };

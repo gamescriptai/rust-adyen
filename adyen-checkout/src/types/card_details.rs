@@ -158,9 +158,11 @@ impl CardDetailsRequestBuilder {
     ///
     /// Returns an error if required fields are not set.
     pub fn build(self) -> Result<CardDetailsRequest> {
-        let card_number = self.card_number
+        let card_number = self
+            .card_number
             .ok_or_else(|| AdyenError::config("card_number is required"))?;
-        let merchant_account = self.merchant_account
+        let merchant_account = self
+            .merchant_account
             .ok_or_else(|| AdyenError::config("merchant_account is required"))?;
 
         Ok(CardDetailsRequest {
@@ -184,7 +186,10 @@ impl CardDetailsRequest {
     /// # Errors
     ///
     /// Returns an error if the card number is empty.
-    pub fn simple(card_number: impl Into<String>, merchant_account: impl Into<String>) -> Result<Self> {
+    pub fn simple(
+        card_number: impl Into<String>,
+        merchant_account: impl Into<String>,
+    ) -> Result<Self> {
         let card_number = card_number.into();
         if card_number.is_empty() {
             return Err(AdyenError::config("card_number cannot be empty"));
@@ -215,7 +220,7 @@ pub mod brands {
     pub const DISCOVER: &str = "discover";
     /// JCB brand.
     pub const JCB: &str = "jcb";
-    /// UnionPay brand.
+    /// `UnionPay` brand.
     pub const UNIONPAY: &str = "cup";
 }
 
@@ -258,16 +263,34 @@ mod tests {
 
     #[test]
     fn test_funding_source_serialization() {
-        assert_eq!(serde_json::to_string(&FundingSource::Credit).unwrap(), "\"credit\"");
-        assert_eq!(serde_json::to_string(&FundingSource::Debit).unwrap(), "\"debit\"");
-        assert_eq!(serde_json::to_string(&FundingSource::Prepaid).unwrap(), "\"prepaid\"");
+        assert_eq!(
+            serde_json::to_string(&FundingSource::Credit).unwrap(),
+            "\"credit\""
+        );
+        assert_eq!(
+            serde_json::to_string(&FundingSource::Debit).unwrap(),
+            "\"debit\""
+        );
+        assert_eq!(
+            serde_json::to_string(&FundingSource::Prepaid).unwrap(),
+            "\"prepaid\""
+        );
     }
 
     #[test]
     fn test_cvc_policy_serialization() {
-        assert_eq!(serde_json::to_string(&CvcPolicy::Required).unwrap(), "\"required\"");
-        assert_eq!(serde_json::to_string(&CvcPolicy::Optional).unwrap(), "\"optional\"");
-        assert_eq!(serde_json::to_string(&CvcPolicy::Hidden).unwrap(), "\"hidden\"");
+        assert_eq!(
+            serde_json::to_string(&CvcPolicy::Required).unwrap(),
+            "\"required\""
+        );
+        assert_eq!(
+            serde_json::to_string(&CvcPolicy::Optional).unwrap(),
+            "\"optional\""
+        );
+        assert_eq!(
+            serde_json::to_string(&CvcPolicy::Hidden).unwrap(),
+            "\"hidden\""
+        );
     }
 
     #[test]

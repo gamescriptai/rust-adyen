@@ -1,33 +1,32 @@
 //! Types for Checkout API requests and responses.
 
+pub mod additional;
+pub mod card_details;
+pub mod modifications;
+pub mod orders;
 pub mod payment_methods;
 pub mod payments;
 pub mod sessions;
-pub mod card_details;
-pub mod additional;
-pub mod modifications;
-pub mod orders;
 
 // Re-export main types
-pub use payment_methods::{PaymentMethodsRequest, PaymentMethodsResponse, PaymentMethod};
-pub use payments::{
-    PaymentRequest, PaymentResponse, PaymentDetailsRequest, PaymentDetailsResponse,
-    PaymentResultCode, PaymentAction,
-};
-pub use sessions::{CreateCheckoutSessionRequest, CreateCheckoutSessionResponse};
-pub use card_details::{CardDetailsRequest, CardDetailsResponse, CardBrand};
 pub use additional::{
-    SessionResultResponse, ListStoredPaymentMethodsResponse, StoredPaymentMethodResource,
-    BalanceCheckRequest, BalanceCheckResponse, PaymentLinkRequest, PaymentLinkResponse,
-    ApplePaySessionRequest, ApplePaySessionResponse, OriginKeysRequest, OriginKeysResponse,
+    ApplePaySessionRequest, ApplePaySessionResponse, BalanceCheckRequest, BalanceCheckResponse,
+    ListStoredPaymentMethodsResponse, OriginKeysRequest, OriginKeysResponse, PaymentLinkRequest,
+    PaymentLinkResponse, SessionResultResponse, StoredPaymentMethodResource,
 };
+pub use card_details::{CardBrand, CardDetailsRequest, CardDetailsResponse};
 pub use modifications::{
-    CaptureRequest, CaptureResponse, RefundRequest, RefundResponse,
-    CancelRequest, CancelResponse, ReversalRequest, ReversalResponse,
-    AmountUpdateRequest, AmountUpdateResponse,
+    AmountUpdateRequest, AmountUpdateResponse, CancelRequest, CancelResponse, CaptureRequest,
+    CaptureResponse, RefundRequest, RefundResponse, ReversalRequest, ReversalResponse,
 };
 pub use orders::{
-    CreateOrderRequest, CreateOrderResponse, CancelOrderRequest, CancelOrderResponse,
-    DonationRequest, DonationResponse, DonationCampaignsRequest, DonationCampaignsResponse,
+    CancelOrderRequest, CancelOrderResponse, CreateOrderRequest, CreateOrderResponse,
+    DonationCampaignsRequest, DonationCampaignsResponse, DonationRequest, DonationResponse,
     PayPalUpdateOrderRequest, PayPalUpdateOrderResponse,
 };
+pub use payment_methods::{PaymentMethod, PaymentMethodsRequest, PaymentMethodsResponse};
+pub use payments::{
+    PaymentAction, PaymentDetailsRequest, PaymentDetailsResponse, PaymentRequest, PaymentResponse,
+    PaymentResultCode,
+};
+pub use sessions::{CreateCheckoutSessionRequest, CreateCheckoutSessionResponse};

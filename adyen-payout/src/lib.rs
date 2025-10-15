@@ -3,6 +3,8 @@
 //! This crate provides access to Adyen's Payout API v68 for fund disbursement and payout management.
 //! It includes support for instant payouts, batch payouts, payout reviews, and comprehensive
 //! payout status tracking.
+
+#![allow(clippy::type_complexity)]
 //!
 //! ## Features
 //!
@@ -36,8 +38,7 @@ pub mod types;
 // Re-export main types for convenience
 pub use api::PayoutApi;
 pub use types::{
-    SubmitRequest, SubmitResponse, ConfirmRequest, ConfirmResponse,
-    ReviewPayoutRequest, DeclinePayoutRequest, PayoutResponse,
-    PayoutMethodDetails, BankAccount, Card, BankAccountType,
-    Address, Name, EntityType,
+    Address, BankAccount, BankAccountType, Card, ConfirmRequest, ConfirmResponse,
+    DeclinePayoutRequest, EntityType, Name, PayoutMethodDetails, PayoutResponse,
+    ReviewPayoutRequest, SubmitRequest, SubmitResponse,
 };

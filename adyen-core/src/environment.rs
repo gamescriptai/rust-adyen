@@ -221,7 +221,7 @@ impl fmt::Display for Environment {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Test => write!(f, "test"),
-            Self::Live { url_prefix } => write!(f, "live({})", url_prefix),
+            Self::Live { url_prefix } => write!(f, "live({url_prefix})"),
         }
     }
 }
@@ -291,9 +291,9 @@ mod tests {
     #[test]
     fn test_environment_display() {
         let test_env = Environment::test();
-        assert_eq!(format!("{}", test_env), "test");
+        assert_eq!(format!("{test_env}"), "test");
 
         let live_env = Environment::live("test-prefix").unwrap();
-        assert_eq!(format!("{}", live_env), "live(test-prefix)");
+        assert_eq!(format!("{live_env}"), "live(test-prefix)");
     }
 }

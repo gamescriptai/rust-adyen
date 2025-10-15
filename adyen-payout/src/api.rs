@@ -1,7 +1,7 @@
 //! Payout API client implementation.
 
-use adyen_core::{Client, Config, Result};
 use crate::types::*;
+use adyen_core::{Client, Config, Result};
 
 /// Adyen Payout API client.
 ///
@@ -82,7 +82,10 @@ impl PayoutApi {
     /// # }
     /// ```
     pub async fn submit(&self, request: &SubmitRequest) -> Result<SubmitResponse> {
-        let url = format!("{}/pal/servlet/Payout/v68/submitThirdParty", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payout/v68/submitThirdParty",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -113,7 +116,10 @@ impl PayoutApi {
     /// # }
     /// ```
     pub async fn confirm(&self, request: &ConfirmRequest) -> Result<ConfirmResponse> {
-        let url = format!("{}/pal/servlet/Payout/v68/confirmThirdParty", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payout/v68/confirmThirdParty",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -144,7 +150,10 @@ impl PayoutApi {
     /// # }
     /// ```
     pub async fn decline_payout(&self, request: &DeclinePayoutRequest) -> Result<PayoutResponse> {
-        let url = format!("{}/pal/servlet/Payout/v68/declineThirdParty", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payout/v68/declineThirdParty",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -187,7 +196,10 @@ impl PayoutApi {
     /// # }
     /// ```
     pub async fn instant_payout(&self, request: &SubmitRequest) -> Result<SubmitResponse> {
-        let url = format!("{}/pal/servlet/Payout/v68/payout", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payout/v68/payout",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -232,7 +244,10 @@ impl PayoutApi {
     /// # }
     /// ```
     pub async fn store_detail_and_submit(&self, request: &SubmitRequest) -> Result<SubmitResponse> {
-        let url = format!("{}/pal/servlet/Payout/v68/storeDetailAndSubmitThirdParty", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payout/v68/storeDetailAndSubmitThirdParty",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -277,7 +292,10 @@ impl PayoutApi {
     /// # }
     /// ```
     pub async fn store_detail(&self, request: &SubmitRequest) -> Result<SubmitResponse> {
-        let url = format!("{}/pal/servlet/Payout/v68/storeDetail", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payout/v68/storeDetail",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -297,7 +315,7 @@ mod tests {
             .build()
             .unwrap();
 
-        let api = PayoutApi::new(config).unwrap();
+        let _api = PayoutApi::new(config).unwrap();
         // API created successfully indicates proper configuration
     }
 
@@ -310,7 +328,7 @@ mod tests {
             .build()
             .unwrap();
 
-        let api = PayoutApi::new(config).unwrap();
+        let _api = PayoutApi::new(config).unwrap();
 
         // Test that the API instance was created successfully
         // API created successfully indicates proper configuration

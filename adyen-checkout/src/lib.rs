@@ -47,9 +47,7 @@ pub mod types;
 // Re-export main API and commonly used types
 pub use api::CheckoutApi;
 pub use types::{
-    PaymentMethodsRequest, PaymentMethodsResponse,
-    PaymentRequest, PaymentResponse,
-    PaymentDetailsRequest, PaymentDetailsResponse,
-    CreateCheckoutSessionRequest, CreateCheckoutSessionResponse,
-    CardDetailsRequest, CardDetailsResponse,
+    CardDetailsRequest, CardDetailsResponse, CreateCheckoutSessionRequest,
+    CreateCheckoutSessionResponse, PaymentDetailsRequest, PaymentDetailsResponse,
+    PaymentMethodsRequest, PaymentMethodsResponse, PaymentRequest, PaymentResponse,
 };

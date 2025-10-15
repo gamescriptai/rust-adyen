@@ -1,26 +1,26 @@
 //! Types for Classic Payments API requests and responses.
 
-pub mod payment;
-pub mod modifications;
-pub mod three_d_secure;
-pub mod fraud;
 pub mod additional;
+pub mod fraud;
+pub mod modifications;
+pub mod payment;
+pub mod three_d_secure;
 
 // Re-export main types
-pub use payment::{
-    PaymentRequest, PaymentResult, PaymentResultCode, Card, PaymentMethod,
-    ApplicationInfo, BrowserInfo, FraudResult, RecurringType,
-};
-pub use modifications::{
-    CaptureRequest, CancelRequest, RefundRequest, CancelOrRefundRequest,
-    ModificationResult, ModificationResponse,
-};
-pub use three_d_secure::{
-    PaymentRequest3d, PaymentRequest3ds2, ThreeDSecureData, ThreeDS2RequestData,
-    ThreeDS2Result, AuthenticationResultRequest, AuthenticationResultResponse,
+pub use additional::{
+    AdjustAuthorisationRequest, DonateRequest, TechnicalCancelRequest, ThreeDSResultRequest,
+    ThreeDSResultResponse, VoidPendingRefundRequest,
 };
 pub use fraud::{FraudCheckResult, FraudCheckResultWrapper};
-pub use additional::{
-    AdjustAuthorisationRequest, DonateRequest,
-    ThreeDSResultRequest, ThreeDSResultResponse, TechnicalCancelRequest, VoidPendingRefundRequest,
+pub use modifications::{
+    CancelOrRefundRequest, CancelRequest, CaptureRequest, ModificationResponse, ModificationResult,
+    RefundRequest,
+};
+pub use payment::{
+    ApplicationInfo, BrowserInfo, Card, FraudResult, PaymentMethod, PaymentRequest, PaymentResult,
+    PaymentResultCode, RecurringType,
+};
+pub use three_d_secure::{
+    AuthenticationResultRequest, AuthenticationResultResponse, PaymentRequest3d,
+    PaymentRequest3ds2, ThreeDS2RequestData, ThreeDS2Result, ThreeDSecureData,
 };

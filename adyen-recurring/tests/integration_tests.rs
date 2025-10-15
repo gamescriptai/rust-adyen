@@ -1,10 +1,9 @@
 //! Integration tests for the Adyen Recurring API v68.
 
-use adyen_core::{Amount, Currency, ConfigBuilder, Environment};
+use adyen_core::{Amount, ConfigBuilder, Currency, Environment};
 use adyen_recurring::{
-    RecurringApi, RecurringDetailsRequest, DisableRequest,
-    NotifyShopperRequest, ScheduleAccountUpdaterRequest,
-    Recurring, RecurringContract, Card
+    Card, DisableRequest, NotifyShopperRequest, Recurring, RecurringApi, RecurringContract,
+    RecurringDetailsRequest, ScheduleAccountUpdaterRequest,
 };
 
 fn create_test_config() -> adyen_core::Config {
@@ -67,7 +66,10 @@ mod request_building_tests {
 
         assert_eq!(&*request.merchant_account, "TestMerchant");
         assert_eq!(&*request.shopper_reference, "shopper_12345");
-        assert_eq!(request.recurring_detail_reference.as_deref(), Some("8415736344864224"));
+        assert_eq!(
+            request.recurring_detail_reference.as_deref(),
+            Some("8415736344864224")
+        );
     }
 
     #[test]
@@ -154,7 +156,6 @@ mod api_tests {
 #[cfg(test)]
 mod serialization_tests {
     use super::*;
-    use serde_json;
 
     #[test]
     fn test_recurring_details_request_serialization() {
@@ -185,7 +186,10 @@ mod serialization_tests {
 
         assert_eq!(request.merchant_account, deserialized.merchant_account);
         assert_eq!(request.shopper_reference, deserialized.shopper_reference);
-        assert_eq!(request.recurring_detail_reference, deserialized.recurring_detail_reference);
+        assert_eq!(
+            request.recurring_detail_reference,
+            deserialized.recurring_detail_reference
+        );
     }
 
     #[test]
@@ -203,7 +207,10 @@ mod serialization_tests {
         let json = serde_json::to_string(&request).unwrap();
         let deserialized: NotifyShopperRequest = serde_json::from_str(&json).unwrap();
 
-        assert_eq!(request.amount.minor_units(), deserialized.amount.minor_units());
+        assert_eq!(
+            request.amount.minor_units(),
+            deserialized.amount.minor_units()
+        );
         assert_eq!(request.merchant_account, deserialized.merchant_account);
         assert_eq!(request.reference, deserialized.reference);
     }
@@ -308,8 +315,14 @@ mod workflow_tests {
         };
 
         // Verify all requests are properly constructed
-        assert_eq!(list_request.shopper_reference, disable_request.shopper_reference);
-        assert_eq!(disable_request.shopper_reference, updater_request.shopper_reference);
+        assert_eq!(
+            list_request.shopper_reference,
+            disable_request.shopper_reference
+        );
+        assert_eq!(
+            disable_request.shopper_reference,
+            updater_request.shopper_reference
+        );
         assert!(matches!(
             list_request.recurring.unwrap().contract,
             RecurringContract::OneclickRecurring

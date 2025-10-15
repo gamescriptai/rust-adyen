@@ -1,7 +1,7 @@
 //! Recurring API client implementation.
 
-use adyen_core::{Client, Config, Result};
 use crate::types::*;
+use adyen_core::{Client, Config, Result};
 
 /// Adyen Recurring API client.
 ///
@@ -65,8 +65,14 @@ impl RecurringApi {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn list_recurring_details(&self, request: &RecurringDetailsRequest) -> Result<RecurringDetailsResult> {
-        let url = format!("{}/pal/servlet/Recurring/v68/listRecurringDetails", self.client.config().environment().classic_api_url());
+    pub async fn list_recurring_details(
+        &self,
+        request: &RecurringDetailsRequest,
+    ) -> Result<RecurringDetailsResult> {
+        let url = format!(
+            "{}/pal/servlet/Recurring/v68/listRecurringDetails",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -98,7 +104,10 @@ impl RecurringApi {
     /// # }
     /// ```
     pub async fn disable(&self, request: &DisableRequest) -> Result<DisableResult> {
-        let url = format!("{}/pal/servlet/Recurring/v68/disable", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Recurring/v68/disable",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -111,8 +120,14 @@ impl RecurringApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn notify_shopper(&self, request: &NotifyShopperRequest) -> Result<NotifyShopperResult> {
-        let url = format!("{}/pal/servlet/Recurring/v68/notifyShopper", self.client.config().environment().classic_api_url());
+    pub async fn notify_shopper(
+        &self,
+        request: &NotifyShopperRequest,
+    ) -> Result<NotifyShopperResult> {
+        let url = format!(
+            "{}/pal/servlet/Recurring/v68/notifyShopper",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -125,8 +140,14 @@ impl RecurringApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn schedule_account_updater(&self, request: &ScheduleAccountUpdaterRequest) -> Result<ScheduleAccountUpdaterResult> {
-        let url = format!("{}/pal/servlet/Recurring/v68/scheduleAccountUpdater", self.client.config().environment().classic_api_url());
+    pub async fn schedule_account_updater(
+        &self,
+        request: &ScheduleAccountUpdaterRequest,
+    ) -> Result<ScheduleAccountUpdaterResult> {
+        let url = format!(
+            "{}/pal/servlet/Recurring/v68/scheduleAccountUpdater",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -141,7 +162,10 @@ impl RecurringApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn create_permit(&self, request: &CreatePermitRequest) -> Result<CreatePermitResult> {
-        let url = format!("{}/pal/servlet/Recurring/v68/createPermit", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Recurring/v68/createPermit",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -154,8 +178,14 @@ impl RecurringApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn disable_permit(&self, request: &DisablePermitRequest) -> Result<DisablePermitResult> {
-        let url = format!("{}/pal/servlet/Recurring/v68/disablePermit", self.client.config().environment().classic_api_url());
+    pub async fn disable_permit(
+        &self,
+        request: &DisablePermitRequest,
+    ) -> Result<DisablePermitResult> {
+        let url = format!(
+            "{}/pal/servlet/Recurring/v68/disablePermit",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -202,7 +232,10 @@ mod tests {
         assert_eq!(request.merchant_account.as_ref(), "TestMerchant");
         assert_eq!(request.permits.len(), 1);
         assert_eq!(request.permits[0].partner.as_ref(), "test_partner");
-        assert_eq!(request.recurring_detail_reference.as_ref(), "8415736344864224");
+        assert_eq!(
+            request.recurring_detail_reference.as_ref(),
+            "8415736344864224"
+        );
     }
 
     #[test]

@@ -5,8 +5,8 @@
 
 use adyen_core::{Amount, ConfigBuilder, Currency, Environment};
 use adyen_payout::{
-    PayoutApi, SubmitRequest, ConfirmRequest, ReviewPayoutRequest, DeclinePayoutRequest,
-    PayoutMethodDetails, BankAccount, Card, BankAccountType, Address, Name, EntityType
+    Address, BankAccount, BankAccountType, Card, ConfirmRequest, DeclinePayoutRequest, EntityType,
+    Name, PayoutApi, PayoutMethodDetails, ReviewPayoutRequest, SubmitRequest,
 };
 
 /// Helper function to create a test configuration.
@@ -68,7 +68,7 @@ mod payout_api_tests {
     #[test]
     fn test_payout_api_creation() {
         let config = create_test_config();
-        let api = PayoutApi::new(config).unwrap();
+        let _api = PayoutApi::new(config).unwrap();
         // We can't directly access the client field, but creating the API successfully indicates it's working
     }
 
@@ -99,7 +99,10 @@ mod payout_api_tests {
         assert_eq!(&*request.shopper_email, "test@example.com");
         assert!(request.billing_address.is_some());
         assert!(request.shopper_name.is_some());
-        assert!(matches!(request.entity_type, Some(EntityType::NaturalPerson)));
+        assert!(matches!(
+            request.entity_type,
+            Some(EntityType::NaturalPerson)
+        ));
     }
 
     #[test]
@@ -120,7 +123,10 @@ mod payout_api_tests {
         assert_eq!(request.amount.minor_units(), 5000);
         assert_eq!(request.amount.currency(), Currency::USD);
         assert_eq!(&*request.reference, "payout-card-001");
-        assert!(matches!(request.payout_method_details, PayoutMethodDetails::Card(_)));
+        assert!(matches!(
+            request.payout_method_details,
+            PayoutMethodDetails::Card(_)
+        ));
     }
 
     #[test]
@@ -141,7 +147,10 @@ mod payout_api_tests {
         assert_eq!(request.amount.minor_units(), 2500);
         assert_eq!(request.amount.currency(), Currency::EUR);
         assert_eq!(&*request.reference, "instant-payout-001");
-        assert!(matches!(request.payout_method_details, PayoutMethodDetails::Card(_)));
+        assert!(matches!(
+            request.payout_method_details,
+            PayoutMethodDetails::Card(_)
+        ));
     }
 
     #[test]
@@ -225,7 +234,6 @@ mod payout_api_tests {
 #[cfg(test)]
 mod serialization_tests {
     use super::*;
-    use serde_json;
 
     #[test]
     fn test_submit_request_serialization() {
@@ -245,7 +253,10 @@ mod serialization_tests {
         let json = serde_json::to_string(&request).unwrap();
         let deserialized: SubmitRequest = serde_json::from_str(&json).unwrap();
 
-        assert_eq!(request.amount.minor_units(), deserialized.amount.minor_units());
+        assert_eq!(
+            request.amount.minor_units(),
+            deserialized.amount.minor_units()
+        );
         assert_eq!(request.merchant_account, deserialized.merchant_account);
         assert_eq!(request.reference, deserialized.reference);
     }
@@ -460,7 +471,10 @@ mod workflow_tests {
             .unwrap();
 
         assert_eq!(payout_request.amount.minor_units(), 5000);
-        assert_eq!(payout_request.shopper_reference, store_request.shopper_reference);
+        assert_eq!(
+            payout_request.shopper_reference,
+            store_request.shopper_reference
+        );
     }
 
     /// Test the instant card payout workflow for immediate card payouts:
@@ -486,7 +500,10 @@ mod workflow_tests {
         assert_eq!(instant_request.amount.minor_units(), 7500);
         assert_eq!(instant_request.amount.currency(), Currency::GBP);
         assert_eq!(&*instant_request.reference, "instant-card-payout-001");
-        assert!(matches!(instant_request.payout_method_details, PayoutMethodDetails::Card(_)));
+        assert!(matches!(
+            instant_request.payout_method_details,
+            PayoutMethodDetails::Card(_)
+        ));
 
         // Instant payouts are typically for cards and don't require confirmation workflow
         if let PayoutMethodDetails::Card(ref card_details) = instant_request.payout_method_details {

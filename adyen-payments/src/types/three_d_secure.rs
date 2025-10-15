@@ -1,6 +1,6 @@
 //! 3D Secure authentication types for Classic Payments API.
 
-use adyen_core::{Amount, AdyenError, Result};
+use adyen_core::{AdyenError, Amount, Result};
 use serde::{Deserialize, Serialize};
 
 /// Request for 3D Secure 1.0 authentication.
@@ -17,7 +17,7 @@ pub struct PaymentRequest3d {
     /// The MD parameter from the issuer response.
     pub md: String,
 
-    /// The PaRes (Payer Authentication Response) from the issuer.
+    /// The `PaRes` (Payer Authentication Response) from the issuer.
     pub pa_response: String,
 
     /// The shopper's IP address.
@@ -467,7 +467,7 @@ impl PaymentRequest3dBuilder {
         self
     }
 
-    /// Set the PaRes parameter.
+    /// Set the `PaRes` parameter.
     #[must_use]
     pub fn pa_response(mut self, pa_response: impl Into<String>) -> Self {
         self.pa_response = Some(pa_response.into());
@@ -487,11 +487,14 @@ impl PaymentRequest3dBuilder {
     ///
     /// Returns an error if required fields are not set.
     pub fn build(self) -> Result<PaymentRequest3d> {
-        let merchant_account = self.merchant_account
+        let merchant_account = self
+            .merchant_account
             .ok_or_else(|| AdyenError::config("merchant_account is required"))?;
-        let md = self.md
+        let md = self
+            .md
             .ok_or_else(|| AdyenError::config("md is required"))?;
-        let pa_response = self.pa_response
+        let pa_response = self
+            .pa_response
             .ok_or_else(|| AdyenError::config("pa_response is required"))?;
 
         Ok(PaymentRequest3d {
@@ -562,9 +565,11 @@ impl PaymentRequest3ds2Builder {
     ///
     /// Returns an error if required fields are not set.
     pub fn build(self) -> Result<PaymentRequest3ds2> {
-        let merchant_account = self.merchant_account
+        let merchant_account = self
+            .merchant_account
             .ok_or_else(|| AdyenError::config("merchant_account is required"))?;
-        let three_ds2_result = self.three_ds2_result
+        let three_ds2_result = self
+            .three_ds2_result
             .ok_or_else(|| AdyenError::config("three_ds2_result is required"))?;
 
         Ok(PaymentRequest3ds2 {
@@ -631,9 +636,18 @@ mod tests {
 
     #[test]
     fn test_device_channel_serialization() {
-        assert_eq!(serde_json::to_string(&DeviceChannel::Browser).unwrap(), "\"browser\"");
-        assert_eq!(serde_json::to_string(&DeviceChannel::App).unwrap(), "\"app\"");
-        assert_eq!(serde_json::to_string(&DeviceChannel::ThreeRi).unwrap(), "\"3RI\"");
+        assert_eq!(
+            serde_json::to_string(&DeviceChannel::Browser).unwrap(),
+            "\"browser\""
+        );
+        assert_eq!(
+            serde_json::to_string(&DeviceChannel::App).unwrap(),
+            "\"app\""
+        );
+        assert_eq!(
+            serde_json::to_string(&DeviceChannel::ThreeRi).unwrap(),
+            "\"3RI\""
+        );
     }
 
     #[test]

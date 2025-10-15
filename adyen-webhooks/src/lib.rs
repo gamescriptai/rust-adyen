@@ -77,9 +77,7 @@ pub mod types;
 pub mod validation;
 
 // Re-export main types for convenience
-pub use types::{
-    EventCode, NotificationItem, NotificationRequestItem, Webhook,
-};
+pub use types::{EventCode, NotificationItem, NotificationRequestItem, Webhook};
 pub use validation::{HmacValidator, ValidationError};
 
 /// Handle and parse a webhook request from JSON.
@@ -95,6 +93,10 @@ pub use validation::{HmacValidator, ValidationError};
 /// # Returns
 ///
 /// Returns a parsed `Webhook` object or a JSON parsing error.
+///
+/// # Errors
+///
+/// Returns an error if the JSON payload cannot be parsed as a valid webhook.
 ///
 /// # Example
 ///
@@ -174,6 +176,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::const_is_empty)]
     fn test_library_version() {
         assert!(!VERSION.is_empty());
     }

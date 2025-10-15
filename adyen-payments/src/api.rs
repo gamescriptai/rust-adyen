@@ -1,7 +1,12 @@
 //! Classic Payments API client implementation.
 
+use crate::types::{
+    AdjustAuthorisationRequest, AuthenticationResultRequest, AuthenticationResultResponse,
+    CancelOrRefundRequest, CancelRequest, CaptureRequest, DonateRequest, ModificationResult,
+    PaymentRequest, PaymentRequest3d, PaymentRequest3ds2, PaymentResult, RefundRequest,
+    TechnicalCancelRequest, ThreeDSResultRequest, ThreeDSResultResponse, VoidPendingRefundRequest,
+};
 use adyen_core::{Client, Config, Result};
-use crate::types::*;
 
 /// Adyen Classic Payments API client.
 ///
@@ -69,7 +74,10 @@ impl PaymentsApi {
     /// # }
     /// ```
     pub async fn authorise(&self, request: &PaymentRequest) -> Result<PaymentResult> {
-        let url = format!("{}/pal/servlet/Payment/v68/authorise", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/authorise",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -83,7 +91,10 @@ impl PaymentsApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn authorise_3d(&self, request: &PaymentRequest3d) -> Result<PaymentResult> {
-        let url = format!("{}/pal/servlet/Payment/v68/authorise3d", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/authorise3d",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -97,7 +108,10 @@ impl PaymentsApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn authorise_3ds2(&self, request: &PaymentRequest3ds2) -> Result<PaymentResult> {
-        let url = format!("{}/pal/servlet/Payment/v68/authorise3ds2", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/authorise3ds2",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -109,8 +123,14 @@ impl PaymentsApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn get_authentication_result(&self, request: &AuthenticationResultRequest) -> Result<AuthenticationResultResponse> {
-        let url = format!("{}/pal/servlet/Payment/v68/getAuthenticationResult", self.client.config().environment().classic_api_url());
+    pub async fn get_authentication_result(
+        &self,
+        request: &AuthenticationResultRequest,
+    ) -> Result<AuthenticationResultResponse> {
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/getAuthenticationResult",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -122,8 +142,14 @@ impl PaymentsApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn retrieve_3ds2_result(&self, request: &ThreeDSResultRequest) -> Result<ThreeDSResultResponse> {
-        let url = format!("{}/pal/servlet/Payment/v68/retrieve3ds2Result", self.client.config().environment().classic_api_url());
+    pub async fn retrieve_3ds2_result(
+        &self,
+        request: &ThreeDSResultRequest,
+    ) -> Result<ThreeDSResultResponse> {
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/retrieve3ds2Result",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -177,7 +203,10 @@ impl ModificationsApi {
     /// # }
     /// ```
     pub async fn capture(&self, request: &CaptureRequest) -> Result<ModificationResult> {
-        let url = format!("{}/pal/servlet/Payment/v68/capture", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/capture",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -191,7 +220,10 @@ impl ModificationsApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn cancel(&self, request: &CancelRequest) -> Result<ModificationResult> {
-        let url = format!("{}/pal/servlet/Payment/v68/cancel", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/cancel",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -205,7 +237,10 @@ impl ModificationsApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn refund(&self, request: &RefundRequest) -> Result<ModificationResult> {
-        let url = format!("{}/pal/servlet/Payment/v68/refund", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/refund",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -218,8 +253,14 @@ impl ModificationsApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn cancel_or_refund(&self, request: &CancelOrRefundRequest) -> Result<ModificationResult> {
-        let url = format!("{}/pal/servlet/Payment/v68/cancelOrRefund", self.client.config().environment().classic_api_url());
+    pub async fn cancel_or_refund(
+        &self,
+        request: &CancelOrRefundRequest,
+    ) -> Result<ModificationResult> {
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/cancelOrRefund",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -232,8 +273,14 @@ impl ModificationsApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn adjust_authorisation(&self, request: &AdjustAuthorisationRequest) -> Result<ModificationResult> {
-        let url = format!("{}/pal/servlet/Payment/v68/adjustAuthorisation", self.client.config().environment().classic_api_url());
+    pub async fn adjust_authorisation(
+        &self,
+        request: &AdjustAuthorisationRequest,
+    ) -> Result<ModificationResult> {
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/adjustAuthorisation",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -246,7 +293,10 @@ impl ModificationsApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn donate(&self, request: &DonateRequest) -> Result<ModificationResult> {
-        let url = format!("{}/pal/servlet/Payment/v68/donate", self.client.config().environment().classic_api_url());
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/donate",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -259,8 +309,14 @@ impl ModificationsApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn technical_cancel(&self, request: &TechnicalCancelRequest) -> Result<ModificationResult> {
-        let url = format!("{}/pal/servlet/Payment/v68/technicalCancel", self.client.config().environment().classic_api_url());
+    pub async fn technical_cancel(
+        &self,
+        request: &TechnicalCancelRequest,
+    ) -> Result<ModificationResult> {
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/technicalCancel",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -273,8 +329,14 @@ impl ModificationsApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn void_pending_refund(&self, request: &VoidPendingRefundRequest) -> Result<ModificationResult> {
-        let url = format!("{}/pal/servlet/Payment/v68/voidPendingRefund", self.client.config().environment().classic_api_url());
+    pub async fn void_pending_refund(
+        &self,
+        request: &VoidPendingRefundRequest,
+    ) -> Result<ModificationResult> {
+        let url = format!(
+            "{}/pal/servlet/Payment/v68/voidPendingRefund",
+            self.client.config().environment().classic_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }

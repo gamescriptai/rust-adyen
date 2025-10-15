@@ -121,7 +121,7 @@ pub struct DonationCampaign {
     pub url: Option<String>,
 }
 
-/// PayPal update order request.
+/// `PayPal` update order request.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PayPalUpdateOrderRequest {
@@ -129,11 +129,11 @@ pub struct PayPalUpdateOrderRequest {
     pub merchant_account: String,
     /// The PSP reference of the payment.
     pub psp_reference: String,
-    /// PayPal order ID.
+    /// `PayPal` order ID.
     pub paypal_order_id: String,
 }
 
-/// PayPal update order response.
+/// `PayPal` update order response.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PayPalUpdateOrderResponse {

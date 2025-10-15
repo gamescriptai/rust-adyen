@@ -178,7 +178,7 @@ impl Currency {
 
     /// Get the minor unit multiplier for this currency.
     ///
-    /// This is 10^decimal_places and is used to convert between
+    /// This is `10^decimal_places` and is used to convert between
     /// major units (e.g., dollars) and minor units (e.g., cents).
     #[must_use]
     pub const fn minor_unit_multiplier(self) -> u64 {
@@ -186,8 +186,7 @@ impl Currency {
             0 => 1,
             1 => 10,
             2 => 100,
-            3 => 1000,
-            _ => 1000, // Fallback for any unexpected values
+            _ => 1000, // Fallback for any unexpected values (including 3 and higher)
         }
     }
 }

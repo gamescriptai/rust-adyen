@@ -131,6 +131,7 @@ pub struct DeviceFingerprint {
 
 impl DeviceFingerprint {
     /// Create a new device fingerprint builder.
+    #[must_use]
     pub fn builder() -> DeviceFingerprintBuilder {
         DeviceFingerprintBuilder::default()
     }
@@ -183,6 +184,7 @@ impl DeviceFingerprintBuilder {
     }
 
     /// Set the timezone offset in minutes.
+    #[must_use]
     pub fn timezone_offset(mut self, offset: i16) -> Self {
         self.timezone_offset = Some(offset);
         self
@@ -195,24 +197,28 @@ impl DeviceFingerprintBuilder {
     }
 
     /// Set the color depth.
+    #[must_use]
     pub fn color_depth(mut self, depth: u8) -> Self {
         self.color_depth = Some(depth);
         self
     }
 
     /// Set whether Java is enabled.
+    #[must_use]
     pub fn java_enabled(mut self, enabled: bool) -> Self {
         self.java_enabled = Some(enabled);
         self
     }
 
     /// Set whether cookies are enabled.
+    #[must_use]
     pub fn cookies_enabled(mut self, enabled: bool) -> Self {
         self.cookies_enabled = Some(enabled);
         self
     }
 
     /// Build the device fingerprint.
+    #[must_use]
     pub fn build(self) -> DeviceFingerprint {
         DeviceFingerprint {
             device_id: self.device_id,
@@ -251,6 +257,7 @@ pub struct RiskData {
 
 impl RiskData {
     /// Create a new risk data builder.
+    #[must_use]
     pub fn builder() -> RiskDataBuilder {
         RiskDataBuilder::default()
     }
@@ -279,18 +286,21 @@ impl RiskDataBuilder {
         K: Into<Box<str>>,
         V: Into<Box<str>>,
     {
-        self.custom_fields.get_or_insert_with(HashMap::new)
+        self.custom_fields
+            .get_or_insert_with(HashMap::new)
             .insert(key.into(), value.into());
         self
     }
 
-    /// Set custom fields from a HashMap.
+    /// Set custom fields from a `HashMap`.
+    #[must_use]
     pub fn custom_fields(mut self, fields: HashMap<Box<str>, Box<str>>) -> Self {
         self.custom_fields = Some(fields);
         self
     }
 
     /// Set the fraud offset.
+    #[must_use]
     pub fn fraud_offset(mut self, offset: i32) -> Self {
         self.fraud_offset = Some(offset);
         self
@@ -303,12 +313,14 @@ impl RiskDataBuilder {
     }
 
     /// Set whether to skip fraud checks.
+    #[must_use]
     pub fn skip_fraud(mut self, skip: bool) -> Self {
         self.skip_fraud = Some(skip);
         self
     }
 
     /// Build the risk data.
+    #[must_use]
     pub fn build(self) -> RiskData {
         RiskData {
             client_data: self.client_data,
@@ -346,8 +358,14 @@ mod tests {
     #[test]
     fn test_fraud_check_result_serialization() {
         let mut metadata = HashMap::new();
-        metadata.insert("provider".into(), serde_json::Value::String("TestProvider".to_string()));
-        metadata.insert("version".into(), serde_json::Value::String("1.0".to_string()));
+        metadata.insert(
+            "provider".into(),
+            serde_json::Value::String("TestProvider".to_string()),
+        );
+        metadata.insert(
+            "version".into(),
+            serde_json::Value::String("1.0".to_string()),
+        );
 
         let check_result = FraudCheckResult {
             name: "TestProvider".into(),
@@ -397,29 +415,60 @@ mod tests {
             .skip_fraud(false)
             .build();
 
-        assert_eq!(risk_data.client_data.as_deref(), Some("encrypted_client_data"));
+        assert_eq!(
+            risk_data.client_data.as_deref(),
+            Some("encrypted_client_data")
+        );
         assert_eq!(risk_data.fraud_offset, Some(100));
         assert_eq!(risk_data.profile_reference.as_deref(), Some("profile_123"));
         assert_eq!(risk_data.skip_fraud, Some(false));
 
         let custom_fields = risk_data.custom_fields.unwrap();
-        assert_eq!(custom_fields.get("merchant_category").map(|s| s.as_ref()), Some("retail"));
-        assert_eq!(custom_fields.get("customer_tier").map(|s| s.as_ref()), Some("premium"));
+        assert_eq!(
+            custom_fields
+                .get("merchant_category")
+                .map(std::convert::AsRef::as_ref),
+            Some("retail")
+        );
+        assert_eq!(
+            custom_fields
+                .get("customer_tier")
+                .map(std::convert::AsRef::as_ref),
+            Some("premium")
+        );
     }
 
     #[test]
     fn test_risk_level_serialization() {
         assert_eq!(serde_json::to_string(&RiskLevel::Low).unwrap(), "\"low\"");
-        assert_eq!(serde_json::to_string(&RiskLevel::Medium).unwrap(), "\"medium\"");
+        assert_eq!(
+            serde_json::to_string(&RiskLevel::Medium).unwrap(),
+            "\"medium\""
+        );
         assert_eq!(serde_json::to_string(&RiskLevel::High).unwrap(), "\"high\"");
-        assert_eq!(serde_json::to_string(&RiskLevel::Critical).unwrap(), "\"critical\"");
+        assert_eq!(
+            serde_json::to_string(&RiskLevel::Critical).unwrap(),
+            "\"critical\""
+        );
     }
 
     #[test]
     fn test_fraud_action_serialization() {
-        assert_eq!(serde_json::to_string(&FraudAction::Allow).unwrap(), "\"ALLOW\"");
-        assert_eq!(serde_json::to_string(&FraudAction::Block).unwrap(), "\"BLOCK\"");
-        assert_eq!(serde_json::to_string(&FraudAction::Challenge).unwrap(), "\"CHALLENGE\"");
-        assert_eq!(serde_json::to_string(&FraudAction::Review).unwrap(), "\"REVIEW\"");
+        assert_eq!(
+            serde_json::to_string(&FraudAction::Allow).unwrap(),
+            "\"ALLOW\""
+        );
+        assert_eq!(
+            serde_json::to_string(&FraudAction::Block).unwrap(),
+            "\"BLOCK\""
+        );
+        assert_eq!(
+            serde_json::to_string(&FraudAction::Challenge).unwrap(),
+            "\"CHALLENGE\""
+        );
+        assert_eq!(
+            serde_json::to_string(&FraudAction::Review).unwrap(),
+            "\"REVIEW\""
+        );
     }
 }

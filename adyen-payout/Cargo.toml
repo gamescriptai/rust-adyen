@@ -9,6 +9,9 @@ homepage.workspace = true
 documentation.workspace = true
 description = "Adyen Payout API v68 for fund disbursement and payout management"
 
+[lints]
+workspace = true
+
 [dependencies]
 adyen-core = { path = "../adyen-core" }
 serde = { version = "1.0", features = ["derive"] }

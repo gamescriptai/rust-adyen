@@ -1,6 +1,6 @@
 //! Classic payment request and response types.
 
-use adyen_core::{Amount, AdyenError, Result};
+use adyen_core::{AdyenError, Amount, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -290,15 +290,15 @@ pub struct PaymentResult {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub additional_data: Option<HashMap<String, String>>,
 
-    /// 3D Secure redirect URL (for result_code = RedirectShopper).
+    /// 3D Secure redirect URL (for `result_code` = `RedirectShopper`).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub issuer_url: Option<String>,
 
-    /// 3D Secure form data (for result_code = RedirectShopper).
+    /// 3D Secure form data (for `result_code` = `RedirectShopper`).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub md: Option<String>,
 
-    /// 3D Secure PaReq data (for result_code = RedirectShopper).
+    /// 3D Secure `PaReq` data (for `result_code` = `RedirectShopper`).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pa_request: Option<String>,
 }
@@ -516,13 +516,17 @@ impl PaymentRequestBuilder {
     ///
     /// Returns an error if required fields are not set.
     pub fn build(self) -> Result<PaymentRequest> {
-        let amount = self.amount
+        let amount = self
+            .amount
             .ok_or_else(|| AdyenError::config("amount is required"))?;
-        let merchant_account = self.merchant_account
+        let merchant_account = self
+            .merchant_account
             .ok_or_else(|| AdyenError::config("merchant_account is required"))?;
-        let reference = self.reference
+        let reference = self
+            .reference
             .ok_or_else(|| AdyenError::config("reference is required"))?;
-        let payment_method = self.payment_method
+        let payment_method = self
+            .payment_method
             .ok_or_else(|| AdyenError::config("payment_method is required"))?;
 
         Ok(PaymentRequest {
@@ -652,8 +656,7 @@ mod tests {
 
     #[test]
     fn test_card_creation() {
-        let card = Card::new("4111111111111111", "12", "2025", "123")
-            .with_holder_name("John Doe");
+        let card = Card::new("4111111111111111", "12", "2025", "123").with_holder_name("John Doe");
 
         assert_eq!(card.number, "4111111111111111");
         assert_eq!(card.expiry_month, "12");
@@ -693,9 +696,6 @@ mod tests {
         assert!(PaymentRequest::builder().build().is_err());
 
         let amount = Amount::from_major_units(100, Currency::EUR);
-        assert!(PaymentRequest::builder()
-            .amount(amount)
-            .build()
-            .is_err());
+        assert!(PaymentRequest::builder().amount(amount).build().is_err());
     }
 }

@@ -3,7 +3,7 @@
 //! This module contains all request and response types for payout operations,
 //! including instant payouts, batch processing, and review workflows.
 
-use adyen_core::{Amount, AdyenError};
+use adyen_core::{AdyenError, Amount};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -98,12 +98,24 @@ impl SubmitRequestBuilder {
     /// Build the submit request.
     pub fn build(self) -> Result<SubmitRequest, AdyenError> {
         Ok(SubmitRequest {
-            amount: self.amount.ok_or_else(|| AdyenError::config("Missing required field: amount"))?,
-            merchant_account: self.merchant_account.ok_or_else(|| AdyenError::config("Missing required field: merchant_account"))?,
-            reference: self.reference.ok_or_else(|| AdyenError::config("Missing required field: reference"))?,
-            shopper_email: self.shopper_email.ok_or_else(|| AdyenError::config("Missing required field: shopper_email"))?,
-            shopper_reference: self.shopper_reference.ok_or_else(|| AdyenError::config("Missing required field: shopper_reference"))?,
-            payout_method_details: self.payout_method_details.ok_or_else(|| AdyenError::config("Missing required field: payout_method_details"))?,
+            amount: self
+                .amount
+                .ok_or_else(|| AdyenError::config("Missing required field: amount"))?,
+            merchant_account: self
+                .merchant_account
+                .ok_or_else(|| AdyenError::config("Missing required field: merchant_account"))?,
+            reference: self
+                .reference
+                .ok_or_else(|| AdyenError::config("Missing required field: reference"))?,
+            shopper_email: self
+                .shopper_email
+                .ok_or_else(|| AdyenError::config("Missing required field: shopper_email"))?,
+            shopper_reference: self
+                .shopper_reference
+                .ok_or_else(|| AdyenError::config("Missing required field: shopper_reference"))?,
+            payout_method_details: self.payout_method_details.ok_or_else(|| {
+                AdyenError::config("Missing required field: payout_method_details")
+            })?,
             billing_address: self.billing_address,
             date_of_birth: self.date_of_birth,
             entity_type: self.entity_type,
@@ -200,8 +212,12 @@ impl ConfirmRequestBuilder {
     /// Build the confirm request.
     pub fn build(self) -> Result<ConfirmRequest, AdyenError> {
         Ok(ConfirmRequest {
-            merchant_account: self.merchant_account.ok_or_else(|| AdyenError::config("Missing required field: merchant_account"))?,
-            original_reference: self.original_reference.ok_or_else(|| AdyenError::config("Missing required field: original_reference"))?,
+            merchant_account: self
+                .merchant_account
+                .ok_or_else(|| AdyenError::config("Missing required field: merchant_account"))?,
+            original_reference: self
+                .original_reference
+                .ok_or_else(|| AdyenError::config("Missing required field: original_reference"))?,
         })
     }
 }
@@ -261,8 +277,12 @@ impl ReviewPayoutRequestBuilder {
     /// Build the review request.
     pub fn build(self) -> Result<ReviewPayoutRequest, AdyenError> {
         Ok(ReviewPayoutRequest {
-            merchant_account: self.merchant_account.ok_or_else(|| AdyenError::config("Missing required field: merchant_account"))?,
-            psp_reference: self.psp_reference.ok_or_else(|| AdyenError::config("Missing required field: psp_reference"))?,
+            merchant_account: self
+                .merchant_account
+                .ok_or_else(|| AdyenError::config("Missing required field: merchant_account"))?,
+            psp_reference: self
+                .psp_reference
+                .ok_or_else(|| AdyenError::config("Missing required field: psp_reference"))?,
         })
     }
 }
@@ -312,8 +332,12 @@ impl DeclinePayoutRequestBuilder {
     /// Build the decline request.
     pub fn build(self) -> Result<DeclinePayoutRequest, AdyenError> {
         Ok(DeclinePayoutRequest {
-            merchant_account: self.merchant_account.ok_or_else(|| AdyenError::config("Missing required field: merchant_account"))?,
-            psp_reference: self.psp_reference.ok_or_else(|| AdyenError::config("Missing required field: psp_reference"))?,
+            merchant_account: self
+                .merchant_account
+                .ok_or_else(|| AdyenError::config("Missing required field: merchant_account"))?,
+            psp_reference: self
+                .psp_reference
+                .ok_or_else(|| AdyenError::config("Missing required field: psp_reference"))?,
         })
     }
 }

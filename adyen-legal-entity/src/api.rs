@@ -1,7 +1,7 @@
 //! Legal Entity API client implementation.
 
-use adyen_core::{Client, Config, Result};
 use crate::types::*;
+use adyen_core::{Client, Config, Result};
 
 /// Adyen Legal Entity API client.
 ///
@@ -85,7 +85,10 @@ impl LegalEntityApi {
     /// # }
     /// ```
     pub async fn create_legal_entity(&self, request: &LegalEntityInfo) -> Result<LegalEntity> {
-        let url = format!("{}/v3/legalEntities", self.client.config().environment().legal_entity_api_url());
+        let url = format!(
+            "{}/v3/legalEntities",
+            self.client.config().environment().legal_entity_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -98,7 +101,11 @@ impl LegalEntityApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_legal_entity(&self, legal_entity_id: &str) -> Result<LegalEntity> {
-        let url = format!("{}/v3/legalEntities/{}", self.client.config().environment().legal_entity_api_url(), legal_entity_id);
+        let url = format!(
+            "{}/v3/legalEntities/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            legal_entity_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -110,8 +117,16 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn update_legal_entity(&self, legal_entity_id: &str, request: &LegalEntityInfo) -> Result<LegalEntity> {
-        let url = format!("{}/v3/legalEntities/{}", self.client.config().environment().legal_entity_api_url(), legal_entity_id);
+    pub async fn update_legal_entity(
+        &self,
+        legal_entity_id: &str,
+        request: &LegalEntityInfo,
+    ) -> Result<LegalEntity> {
+        let url = format!(
+            "{}/v3/legalEntities/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            legal_entity_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -128,7 +143,10 @@ impl LegalEntityApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn create_business_line(&self, request: &BusinessLineInfo) -> Result<BusinessLine> {
-        let url = format!("{}/v3/businessLines", self.client.config().environment().legal_entity_api_url());
+        let url = format!(
+            "{}/v3/businessLines",
+            self.client.config().environment().legal_entity_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -141,7 +159,11 @@ impl LegalEntityApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_business_line(&self, business_line_id: &str) -> Result<BusinessLine> {
-        let url = format!("{}/v3/businessLines/{}", self.client.config().environment().legal_entity_api_url(), business_line_id);
+        let url = format!(
+            "{}/v3/businessLines/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            business_line_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -153,8 +175,16 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn update_business_line(&self, business_line_id: &str, request: &BusinessLineInfo) -> Result<BusinessLine> {
-        let url = format!("{}/v3/businessLines/{}", self.client.config().environment().legal_entity_api_url(), business_line_id);
+    pub async fn update_business_line(
+        &self,
+        business_line_id: &str,
+        request: &BusinessLineInfo,
+    ) -> Result<BusinessLine> {
+        let url = format!(
+            "{}/v3/businessLines/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            business_line_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -167,7 +197,11 @@ impl LegalEntityApi {
     ///
     /// Returns an error if the request fails.
     pub async fn delete_business_line(&self, business_line_id: &str) -> Result<()> {
-        let url = format!("{}/v3/businessLines/{}", self.client.config().environment().legal_entity_api_url(), business_line_id);
+        let url = format!(
+            "{}/v3/businessLines/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            business_line_id
+        );
         self.client.delete(&url).await?;
         Ok(())
     }
@@ -184,7 +218,10 @@ impl LegalEntityApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn upload_document(&self, request: &Document) -> Result<Document> {
-        let url = format!("{}/v3/documents", self.client.config().environment().legal_entity_api_url());
+        let url = format!(
+            "{}/v3/documents",
+            self.client.config().environment().legal_entity_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -197,7 +234,11 @@ impl LegalEntityApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_document(&self, document_id: &str) -> Result<Document> {
-        let url = format!("{}/v3/documents/{}", self.client.config().environment().legal_entity_api_url(), document_id);
+        let url = format!(
+            "{}/v3/documents/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            document_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -210,7 +251,11 @@ impl LegalEntityApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn update_document(&self, document_id: &str, request: &Document) -> Result<Document> {
-        let url = format!("{}/v3/documents/{}", self.client.config().environment().legal_entity_api_url(), document_id);
+        let url = format!(
+            "{}/v3/documents/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            document_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -223,7 +268,11 @@ impl LegalEntityApi {
     ///
     /// Returns an error if the request fails.
     pub async fn delete_document(&self, document_id: &str) -> Result<()> {
-        let url = format!("{}/v3/documents/{}", self.client.config().environment().legal_entity_api_url(), document_id);
+        let url = format!(
+            "{}/v3/documents/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            document_id
+        );
         self.client.delete(&url).await?;
         Ok(())
     }
@@ -239,8 +288,14 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn create_transfer_instrument(&self, request: &TransferInstrumentInfo) -> Result<TransferInstrument> {
-        let url = format!("{}/v3/transferInstruments", self.client.config().environment().legal_entity_api_url());
+    pub async fn create_transfer_instrument(
+        &self,
+        request: &TransferInstrumentInfo,
+    ) -> Result<TransferInstrument> {
+        let url = format!(
+            "{}/v3/transferInstruments",
+            self.client.config().environment().legal_entity_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -252,8 +307,15 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn get_transfer_instrument(&self, transfer_instrument_id: &str) -> Result<TransferInstrument> {
-        let url = format!("{}/v3/transferInstruments/{}", self.client.config().environment().legal_entity_api_url(), transfer_instrument_id);
+    pub async fn get_transfer_instrument(
+        &self,
+        transfer_instrument_id: &str,
+    ) -> Result<TransferInstrument> {
+        let url = format!(
+            "{}/v3/transferInstruments/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            transfer_instrument_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -265,8 +327,16 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn update_transfer_instrument(&self, transfer_instrument_id: &str, request: &TransferInstrumentInfo) -> Result<TransferInstrument> {
-        let url = format!("{}/v3/transferInstruments/{}", self.client.config().environment().legal_entity_api_url(), transfer_instrument_id);
+    pub async fn update_transfer_instrument(
+        &self,
+        transfer_instrument_id: &str,
+        request: &TransferInstrumentInfo,
+    ) -> Result<TransferInstrument> {
+        let url = format!(
+            "{}/v3/transferInstruments/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            transfer_instrument_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -279,7 +349,11 @@ impl LegalEntityApi {
     ///
     /// Returns an error if the request fails.
     pub async fn delete_transfer_instrument(&self, transfer_instrument_id: &str) -> Result<()> {
-        let url = format!("{}/v3/transferInstruments/{}", self.client.config().environment().legal_entity_api_url(), transfer_instrument_id);
+        let url = format!(
+            "{}/v3/transferInstruments/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            transfer_instrument_id
+        );
         self.client.delete(&url).await?;
         Ok(())
     }
@@ -295,8 +369,14 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn create_onboarding_link(&self, request: &OnboardingLinkInfo) -> Result<OnboardingLink> {
-        let url = format!("{}/v3/hostedOnboarding/links", self.client.config().environment().legal_entity_api_url());
+    pub async fn create_onboarding_link(
+        &self,
+        request: &OnboardingLinkInfo,
+    ) -> Result<OnboardingLink> {
+        let url = format!(
+            "{}/v3/hostedOnboarding/links",
+            self.client.config().environment().legal_entity_api_url()
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -309,8 +389,12 @@ impl LegalEntityApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_onboarding_themes(&self) -> Result<Vec<OnboardingTheme>> {
-        let url = format!("{}/v3/hostedOnboarding/themes", self.client.config().environment().legal_entity_api_url());
-        let response: adyen_core::ApiResponse<PaginatedResponse<OnboardingTheme>> = self.client.get(&url).await?;
+        let url = format!(
+            "{}/v3/hostedOnboarding/themes",
+            self.client.config().environment().legal_entity_api_url()
+        );
+        let response: adyen_core::ApiResponse<PaginatedResponse<OnboardingTheme>> =
+            self.client.get(&url).await?;
         Ok(response.data.data)
     }
 
@@ -325,8 +409,15 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn get_pci_questionnaire_infos(&self, legal_entity_id: &str) -> Result<serde_json::Value> {
-        let url = format!("{}/v3/legalEntities/{}/pciQuestionnaires", self.client.config().environment().legal_entity_api_url(), legal_entity_id);
+    pub async fn get_pci_questionnaire_infos(
+        &self,
+        legal_entity_id: &str,
+    ) -> Result<serde_json::Value> {
+        let url = format!(
+            "{}/v3/legalEntities/{}/pciQuestionnaires",
+            self.client.config().environment().legal_entity_api_url(),
+            legal_entity_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -338,8 +429,17 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn get_pci_questionnaire(&self, legal_entity_id: &str, pci_id: &str) -> Result<serde_json::Value> {
-        let url = format!("{}/v3/legalEntities/{}/pciQuestionnaires/{}", self.client.config().environment().legal_entity_api_url(), legal_entity_id, pci_id);
+    pub async fn get_pci_questionnaire(
+        &self,
+        legal_entity_id: &str,
+        pci_id: &str,
+    ) -> Result<serde_json::Value> {
+        let url = format!(
+            "{}/v3/legalEntities/{}/pciQuestionnaires/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            legal_entity_id,
+            pci_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -351,8 +451,18 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn generate_pci_description(&self, legal_entity_id: &str, pci_id: &str, request: &serde_json::Value) -> Result<serde_json::Value> {
-        let url = format!("{}/v3/legalEntities/{}/pciQuestionnaires/{}/generatePciDescription", self.client.config().environment().legal_entity_api_url(), legal_entity_id, pci_id);
+    pub async fn generate_pci_description(
+        &self,
+        legal_entity_id: &str,
+        pci_id: &str,
+        request: &serde_json::Value,
+    ) -> Result<serde_json::Value> {
+        let url = format!(
+            "{}/v3/legalEntities/{}/pciQuestionnaires/{}/generatePciDescription",
+            self.client.config().environment().legal_entity_api_url(),
+            legal_entity_id,
+            pci_id
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -364,8 +474,18 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn sign_pci_questionnaire(&self, legal_entity_id: &str, pci_id: &str, request: &serde_json::Value) -> Result<serde_json::Value> {
-        let url = format!("{}/v3/legalEntities/{}/pciQuestionnaires/{}/signPciQuestionnaire", self.client.config().environment().legal_entity_api_url(), legal_entity_id, pci_id);
+    pub async fn sign_pci_questionnaire(
+        &self,
+        legal_entity_id: &str,
+        pci_id: &str,
+        request: &serde_json::Value,
+    ) -> Result<serde_json::Value> {
+        let url = format!(
+            "{}/v3/legalEntities/{}/pciQuestionnaires/{}/signPciQuestionnaire",
+            self.client.config().environment().legal_entity_api_url(),
+            legal_entity_id,
+            pci_id
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -381,8 +501,15 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn get_terms_of_service_acceptance_infos(&self, legal_entity_id: &str) -> Result<serde_json::Value> {
-        let url = format!("{}/v3/legalEntities/{}/termsOfService", self.client.config().environment().legal_entity_api_url(), legal_entity_id);
+    pub async fn get_terms_of_service_acceptance_infos(
+        &self,
+        legal_entity_id: &str,
+    ) -> Result<serde_json::Value> {
+        let url = format!(
+            "{}/v3/legalEntities/{}/termsOfService",
+            self.client.config().environment().legal_entity_api_url(),
+            legal_entity_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -394,8 +521,17 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn get_terms_of_service_document(&self, legal_entity_id: &str, tos_id: &str) -> Result<serde_json::Value> {
-        let url = format!("{}/v3/legalEntities/{}/termsOfService/{}", self.client.config().environment().legal_entity_api_url(), legal_entity_id, tos_id);
+    pub async fn get_terms_of_service_document(
+        &self,
+        legal_entity_id: &str,
+        tos_id: &str,
+    ) -> Result<serde_json::Value> {
+        let url = format!(
+            "{}/v3/legalEntities/{}/termsOfService/{}",
+            self.client.config().environment().legal_entity_api_url(),
+            legal_entity_id,
+            tos_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -407,8 +543,18 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn accept_terms_of_service(&self, legal_entity_id: &str, tos_id: &str, request: &serde_json::Value) -> Result<serde_json::Value> {
-        let url = format!("{}/v3/legalEntities/{}/termsOfService/{}/acceptTermsOfService", self.client.config().environment().legal_entity_api_url(), legal_entity_id, tos_id);
+    pub async fn accept_terms_of_service(
+        &self,
+        legal_entity_id: &str,
+        tos_id: &str,
+        request: &serde_json::Value,
+    ) -> Result<serde_json::Value> {
+        let url = format!(
+            "{}/v3/legalEntities/{}/termsOfService/{}/acceptTermsOfService",
+            self.client.config().environment().legal_entity_api_url(),
+            legal_entity_id,
+            tos_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -424,8 +570,15 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn check_tax_e_delivery_consent(&self, legal_entity_id: &str) -> Result<serde_json::Value> {
-        let url = format!("{}/v3/legalEntities/{}/taxElectronicDeliveryConsent", self.client.config().environment().legal_entity_api_url(), legal_entity_id);
+    pub async fn check_tax_e_delivery_consent(
+        &self,
+        legal_entity_id: &str,
+    ) -> Result<serde_json::Value> {
+        let url = format!(
+            "{}/v3/legalEntities/{}/taxElectronicDeliveryConsent",
+            self.client.config().environment().legal_entity_api_url(),
+            legal_entity_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -437,8 +590,16 @@ impl LegalEntityApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn set_tax_e_delivery_consent(&self, legal_entity_id: &str, request: &serde_json::Value) -> Result<serde_json::Value> {
-        let url = format!("{}/v3/legalEntities/{}/taxElectronicDeliveryConsent", self.client.config().environment().legal_entity_api_url(), legal_entity_id);
+    pub async fn set_tax_e_delivery_consent(
+        &self,
+        legal_entity_id: &str,
+        request: &serde_json::Value,
+    ) -> Result<serde_json::Value> {
+        let url = format!(
+            "{}/v3/legalEntities/{}/taxElectronicDeliveryConsent",
+            self.client.config().environment().legal_entity_api_url(),
+            legal_entity_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }

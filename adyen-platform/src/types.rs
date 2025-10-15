@@ -625,7 +625,8 @@ impl CreateBalanceAccountRequestBuilder {
     ///
     /// Returns an error if required fields are missing.
     pub fn build(self) -> Result<CreateBalanceAccountRequest, Box<str>> {
-        let account_holder_id = self.account_holder_id
+        let account_holder_id = self
+            .account_holder_id
             .ok_or("account_holder_id is required")?;
 
         Ok(CreateBalanceAccountRequest {

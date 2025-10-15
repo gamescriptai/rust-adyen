@@ -609,13 +609,17 @@ impl CreateMerchantRequestBuilder {
 
     /// Build the CreateMerchantRequest.
     pub fn build(self) -> Result<CreateMerchantRequest> {
-        let company_id = self.company_id
+        let company_id = self
+            .company_id
             .ok_or_else(|| AdyenError::generic("company_id is required"))?;
-        let merchant_account = self.merchant_account
+        let merchant_account = self
+            .merchant_account
             .ok_or_else(|| AdyenError::generic("merchant_account is required"))?;
-        let business_details = self.business_details
+        let business_details = self
+            .business_details
             .ok_or_else(|| AdyenError::generic("business_details is required"))?;
-        let primary_contact = self.primary_contact
+        let primary_contact = self
+            .primary_contact
             .ok_or_else(|| AdyenError::generic("primary_contact is required"))?;
 
         Ok(CreateMerchantRequest {
@@ -678,11 +682,14 @@ impl CreateStoreRequestBuilder {
 
     /// Build the CreateStoreRequest.
     pub fn build(self) -> Result<CreateStoreRequest> {
-        let store_reference = self.store_reference
+        let store_reference = self
+            .store_reference
             .ok_or_else(|| AdyenError::generic("store_reference is required"))?;
-        let description = self.description
+        let description = self
+            .description
             .ok_or_else(|| AdyenError::generic("description is required"))?;
-        let address = self.address
+        let address = self
+            .address
             .ok_or_else(|| AdyenError::generic("address is required"))?;
 
         Ok(CreateStoreRequest {

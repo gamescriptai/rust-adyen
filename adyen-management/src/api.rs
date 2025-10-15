@@ -1,7 +1,7 @@
 //! Management API client implementation.
 
-use adyen_core::{Client, Config, Result};
 use crate::types::*;
+use adyen_core::{Client, Config, Result};
 
 /// Adyen Management API client.
 ///
@@ -50,7 +50,11 @@ impl ManagementApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_company(&self, company_id: &str) -> Result<Company> {
-        let url = format!("{}/v3/companies/{}", self.client.config().environment().management_api_url(), company_id);
+        let url = format!(
+            "{}/v3/companies/{}",
+            self.client.config().environment().management_api_url(),
+            company_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -63,8 +67,13 @@ impl ManagementApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn list_merchants(&self, company_id: &str) -> Result<Vec<MerchantAccount>> {
-        let url = format!("{}/v3/companies/{}/merchants", self.client.config().environment().management_api_url(), company_id);
-        let response: adyen_core::ApiResponse<ListMerchantsResponse> = self.client.get(&url).await?;
+        let url = format!(
+            "{}/v3/companies/{}/merchants",
+            self.client.config().environment().management_api_url(),
+            company_id
+        );
+        let response: adyen_core::ApiResponse<ListMerchantsResponse> =
+            self.client.get(&url).await?;
         Ok(response.data.data)
     }
 
@@ -109,8 +118,15 @@ impl ManagementApi {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn create_merchant(&self, request: &CreateMerchantRequest) -> Result<MerchantAccount> {
-        let url = format!("{}/v3/companies/{}/merchants", self.client.config().environment().management_api_url(), request.company_id);
+    pub async fn create_merchant(
+        &self,
+        request: &CreateMerchantRequest,
+    ) -> Result<MerchantAccount> {
+        let url = format!(
+            "{}/v3/companies/{}/merchants",
+            self.client.config().environment().management_api_url(),
+            request.company_id
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -123,7 +139,11 @@ impl ManagementApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_merchant(&self, merchant_id: &str) -> Result<MerchantAccount> {
-        let url = format!("{}/v3/merchants/{}", self.client.config().environment().management_api_url(), merchant_id);
+        let url = format!(
+            "{}/v3/merchants/{}",
+            self.client.config().environment().management_api_url(),
+            merchant_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -138,7 +158,11 @@ impl ManagementApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn list_stores(&self, merchant_id: &str) -> Result<Vec<Store>> {
-        let url = format!("{}/v3/merchants/{}/stores", self.client.config().environment().management_api_url(), merchant_id);
+        let url = format!(
+            "{}/v3/merchants/{}/stores",
+            self.client.config().environment().management_api_url(),
+            merchant_id
+        );
         let response: adyen_core::ApiResponse<ListStoresResponse> = self.client.get(&url).await?;
         Ok(response.data.data)
     }
@@ -177,8 +201,16 @@ impl ManagementApi {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn create_store(&self, merchant_id: &str, request: &CreateStoreRequest) -> Result<Store> {
-        let url = format!("{}/v3/merchants/{}/stores", self.client.config().environment().management_api_url(), merchant_id);
+    pub async fn create_store(
+        &self,
+        merchant_id: &str,
+        request: &CreateStoreRequest,
+    ) -> Result<Store> {
+        let url = format!(
+            "{}/v3/merchants/{}/stores",
+            self.client.config().environment().management_api_url(),
+            merchant_id
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -191,7 +223,12 @@ impl ManagementApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_store(&self, merchant_id: &str, store_id: &str) -> Result<Store> {
-        let url = format!("{}/v3/merchants/{}/stores/{}", self.client.config().environment().management_api_url(), merchant_id, store_id);
+        let url = format!(
+            "{}/v3/merchants/{}/stores/{}",
+            self.client.config().environment().management_api_url(),
+            merchant_id,
+            store_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -203,8 +240,18 @@ impl ManagementApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn update_store(&self, merchant_id: &str, store_id: &str, request: &CreateStoreRequest) -> Result<Store> {
-        let url = format!("{}/v3/merchants/{}/stores/{}", self.client.config().environment().management_api_url(), merchant_id, store_id);
+    pub async fn update_store(
+        &self,
+        merchant_id: &str,
+        store_id: &str,
+        request: &CreateStoreRequest,
+    ) -> Result<Store> {
+        let url = format!(
+            "{}/v3/merchants/{}/stores/{}",
+            self.client.config().environment().management_api_url(),
+            merchant_id,
+            store_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -218,8 +265,15 @@ impl ManagementApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn get_payment_method_settings(&self, merchant_id: &str) -> Result<PaymentMethodSettings> {
-        let url = format!("{}/v3/merchants/{}/paymentMethodSettings", self.client.config().environment().management_api_url(), merchant_id);
+    pub async fn get_payment_method_settings(
+        &self,
+        merchant_id: &str,
+    ) -> Result<PaymentMethodSettings> {
+        let url = format!(
+            "{}/v3/merchants/{}/paymentMethodSettings",
+            self.client.config().environment().management_api_url(),
+            merchant_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -231,8 +285,18 @@ impl ManagementApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn update_payment_method(&self, merchant_id: &str, payment_method_id: &str, request: &UpdatePaymentMethodRequest) -> Result<PaymentMethod> {
-        let url = format!("{}/v3/merchants/{}/paymentMethodSettings/{}", self.client.config().environment().management_api_url(), merchant_id, payment_method_id);
+    pub async fn update_payment_method(
+        &self,
+        merchant_id: &str,
+        payment_method_id: &str,
+        request: &UpdatePaymentMethodRequest,
+    ) -> Result<PaymentMethod> {
+        let url = format!(
+            "{}/v3/merchants/{}/paymentMethodSettings/{}",
+            self.client.config().environment().management_api_url(),
+            merchant_id,
+            payment_method_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -244,8 +308,16 @@ impl ManagementApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn request_payment_method(&self, merchant_id: &str, request: &UpdatePaymentMethodRequest) -> Result<PaymentMethod> {
-        let url = format!("{}/v3/merchants/{}/paymentMethodSettings", self.client.config().environment().management_api_url(), merchant_id);
+    pub async fn request_payment_method(
+        &self,
+        merchant_id: &str,
+        request: &UpdatePaymentMethodRequest,
+    ) -> Result<PaymentMethod> {
+        let url = format!(
+            "{}/v3/merchants/{}/paymentMethodSettings",
+            self.client.config().environment().management_api_url(),
+            merchant_id
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -260,7 +332,11 @@ impl ManagementApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn list_webhooks(&self, merchant_id: &str) -> Result<Vec<Webhook>> {
-        let url = format!("{}/v3/merchants/{}/webhooks", self.client.config().environment().management_api_url(), merchant_id);
+        let url = format!(
+            "{}/v3/merchants/{}/webhooks",
+            self.client.config().environment().management_api_url(),
+            merchant_id
+        );
         let response: adyen_core::ApiResponse<ListWebhooksResponse> = self.client.get(&url).await?;
         Ok(response.data.data)
     }
@@ -292,8 +368,16 @@ impl ManagementApi {
     /// # Ok(())
     /// # }
     /// ```
-    pub async fn create_webhook(&self, merchant_id: &str, request: &CreateWebhookRequest) -> Result<Webhook> {
-        let url = format!("{}/v3/merchants/{}/webhooks", self.client.config().environment().management_api_url(), merchant_id);
+    pub async fn create_webhook(
+        &self,
+        merchant_id: &str,
+        request: &CreateWebhookRequest,
+    ) -> Result<Webhook> {
+        let url = format!(
+            "{}/v3/merchants/{}/webhooks",
+            self.client.config().environment().management_api_url(),
+            merchant_id
+        );
         let response = self.client.post(&url, request).await?;
         Ok(response.data)
     }
@@ -306,7 +390,12 @@ impl ManagementApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_webhook(&self, merchant_id: &str, webhook_id: &str) -> Result<Webhook> {
-        let url = format!("{}/v3/merchants/{}/webhooks/{}", self.client.config().environment().management_api_url(), merchant_id, webhook_id);
+        let url = format!(
+            "{}/v3/merchants/{}/webhooks/{}",
+            self.client.config().environment().management_api_url(),
+            merchant_id,
+            webhook_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -318,8 +407,18 @@ impl ManagementApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn update_webhook(&self, merchant_id: &str, webhook_id: &str, request: &UpdateWebhookRequest) -> Result<Webhook> {
-        let url = format!("{}/v3/merchants/{}/webhooks/{}", self.client.config().environment().management_api_url(), merchant_id, webhook_id);
+    pub async fn update_webhook(
+        &self,
+        merchant_id: &str,
+        webhook_id: &str,
+        request: &UpdateWebhookRequest,
+    ) -> Result<Webhook> {
+        let url = format!(
+            "{}/v3/merchants/{}/webhooks/{}",
+            self.client.config().environment().management_api_url(),
+            merchant_id,
+            webhook_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -332,7 +431,12 @@ impl ManagementApi {
     ///
     /// Returns an error if the request fails.
     pub async fn delete_webhook(&self, merchant_id: &str, webhook_id: &str) -> Result<()> {
-        let url = format!("{}/v3/merchants/{}/webhooks/{}", self.client.config().environment().management_api_url(), merchant_id, webhook_id);
+        let url = format!(
+            "{}/v3/merchants/{}/webhooks/{}",
+            self.client.config().environment().management_api_url(),
+            merchant_id,
+            webhook_id
+        );
         self.client.delete(&url).await?;
         Ok(())
     }
@@ -347,8 +451,13 @@ impl ManagementApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn list_terminal_models(&self, merchant_id: &str) -> Result<Vec<TerminalModel>> {
-        let url = format!("{}/v3/merchants/{}/terminalModels", self.client.config().environment().management_api_url(), merchant_id);
-        let response: adyen_core::ApiResponse<ListTerminalModelsResponse> = self.client.get(&url).await?;
+        let url = format!(
+            "{}/v3/merchants/{}/terminalModels",
+            self.client.config().environment().management_api_url(),
+            merchant_id
+        );
+        let response: adyen_core::ApiResponse<ListTerminalModelsResponse> =
+            self.client.get(&url).await?;
         Ok(response.data.data)
     }
 
@@ -360,7 +469,11 @@ impl ManagementApi {
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
     pub async fn get_terminal_settings(&self, merchant_id: &str) -> Result<TerminalSettings> {
-        let url = format!("{}/v3/merchants/{}/terminalSettings", self.client.config().environment().management_api_url(), merchant_id);
+        let url = format!(
+            "{}/v3/merchants/{}/terminalSettings",
+            self.client.config().environment().management_api_url(),
+            merchant_id
+        );
         let response = self.client.get(&url).await?;
         Ok(response.data)
     }
@@ -372,8 +485,16 @@ impl ManagementApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn update_terminal_settings(&self, merchant_id: &str, request: &TerminalSettings) -> Result<TerminalSettings> {
-        let url = format!("{}/v3/merchants/{}/terminalSettings", self.client.config().environment().management_api_url(), merchant_id);
+    pub async fn update_terminal_settings(
+        &self,
+        merchant_id: &str,
+        request: &TerminalSettings,
+    ) -> Result<TerminalSettings> {
+        let url = format!(
+            "{}/v3/merchants/{}/terminalSettings",
+            self.client.config().environment().management_api_url(),
+            merchant_id
+        );
         let response = self.client.patch(&url, request).await?;
         Ok(response.data)
     }
@@ -385,9 +506,19 @@ impl ManagementApi {
     /// # Errors
     ///
     /// Returns an error if the request fails or the response cannot be parsed.
-    pub async fn list_store_terminals(&self, merchant_id: &str, store_id: &str) -> Result<Vec<Terminal>> {
-        let url = format!("{}/v3/merchants/{}/stores/{}/terminals", self.client.config().environment().management_api_url(), merchant_id, store_id);
-        let response: adyen_core::ApiResponse<ListTerminalsResponse> = self.client.get(&url).await?;
+    pub async fn list_store_terminals(
+        &self,
+        merchant_id: &str,
+        store_id: &str,
+    ) -> Result<Vec<Terminal>> {
+        let url = format!(
+            "{}/v3/merchants/{}/stores/{}/terminals",
+            self.client.config().environment().management_api_url(),
+            merchant_id,
+            store_id
+        );
+        let response: adyen_core::ApiResponse<ListTerminalsResponse> =
+            self.client.get(&url).await?;
         Ok(response.data.data)
     }
 }

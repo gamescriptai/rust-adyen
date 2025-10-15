@@ -13,7 +13,10 @@ use std::collections::HashMap;
 /// This structure matches the amount format used in Adyen webhooks,
 /// which uses `value` (minor units) and `currency` fields.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 pub struct Amount {
     /// The payment amount in minor units (e.g., cents).
     pub value: i64,
@@ -31,29 +34,43 @@ impl Amount {
     }
 
     /// Create an amount from major units (e.g., dollars).
+    #[must_use]
     pub fn from_major_units(major_units: i64, currency: Currency) -> Self {
         Self {
+            #[allow(clippy::cast_possible_wrap)]
             value: major_units * currency.minor_unit_multiplier() as i64,
             currency: currency.to_string(),
         }
     }
 
     /// Get the amount in minor units.
+    #[must_use]
     pub fn minor_units(&self) -> i64 {
         self.value
     }
 
     /// Get the currency as a string.
+    #[must_use]
     pub fn currency_string(&self) -> &str {
         &self.currency
     }
 
-    /// Convert to adyen_core::Amount if possible.
+    /// Convert to `adyen_core::Amount` if possible.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the currency string cannot be parsed.
     pub fn to_core_amount(&self) -> Result<adyen_core::Amount, String> {
-        let currency = self.currency.parse::<Currency>()
-            .map_err(|e| format!("Invalid currency: {}", e))?;
+        let currency = self
+            .currency
+            .parse::<Currency>()
+            .map_err(|e| format!("Invalid currency: {e}"))?;
 
-        Ok(adyen_core::Amount::from_minor_units(self.value as u64, currency))
+        #[allow(clippy::cast_sign_loss)]
+        Ok(adyen_core::Amount::from_minor_units(
+            self.value as u64,
+            currency,
+        ))
     }
 }
 
@@ -126,7 +143,10 @@ pub struct NotificationRequestItem {
 /// This enum contains all the possible event types that Adyen can send,
 /// covering payments, modifications, disputes, and administrative events.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
-#[cfg_attr(feature = "rkyv", derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize))]
+#[cfg_attr(
+    feature = "rkyv",
+    derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize)
+)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum EventCode {
     /// ACH notification of change event.
@@ -214,6 +234,7 @@ impl Webhook {
     ///
     /// This convenience method extracts all `NotificationRequestItem` objects
     /// from the notification items array for easier processing.
+    #[must_use]
     pub fn get_notification_items(&self) -> Vec<&NotificationRequestItem> {
         self.notification_items
             .iter()
@@ -222,11 +243,13 @@ impl Webhook {
     }
 
     /// Check if this webhook is from the live environment.
+    #[must_use]
     pub fn is_live(&self) -> bool {
         self.live == "true"
     }
 
     /// Check if this webhook is from the test environment.
+    #[must_use]
     pub fn is_test(&self) -> bool {
         self.live == "false"
     }
@@ -234,11 +257,13 @@ impl Webhook {
 
 impl NotificationRequestItem {
     /// Check if this notification represents a successful operation.
+    #[must_use]
     pub fn is_success(&self) -> bool {
         self.success == "true"
     }
 
     /// Check if this notification represents a failed operation.
+    #[must_use]
     pub fn is_failure(&self) -> bool {
         self.success == "false"
     }
@@ -253,6 +278,7 @@ impl NotificationRequestItem {
     }
 
     /// Get a specific value from additional data.
+    #[must_use]
     pub fn get_additional_data(&self, key: &str) -> Option<&serde_json::Value> {
         self.additional_data.as_ref()?.get(key)
     }

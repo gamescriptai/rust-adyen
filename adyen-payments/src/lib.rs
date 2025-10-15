@@ -2,6 +2,12 @@
 //!
 //! This crate provides access to Adyen's Classic Payments API (v68) for traditional
 //! payment processing, including authorization, capture, refund, and cancellation.
+
+#![allow(clippy::type_complexity)]
+#![allow(clippy::return_self_not_must_use)]
+#![allow(clippy::missing_errors_doc)]
+#![allow(clippy::module_name_repetitions)]
+#![allow(clippy::too_many_lines)]
 //!
 //! ## Features
 //!
@@ -47,10 +53,8 @@ pub mod api;
 pub mod types;
 
 // Re-export main API and commonly used types
-pub use api::{PaymentsApi, ModificationsApi};
+pub use api::{ModificationsApi, PaymentsApi};
 pub use types::{
-    PaymentRequest, PaymentResult,
-    PaymentRequest3d, PaymentRequest3ds2,
-    CaptureRequest, CancelRequest, RefundRequest, CancelOrRefundRequest,
-    ModificationResult, Card, PaymentResultCode,
+    CancelOrRefundRequest, CancelRequest, CaptureRequest, Card, ModificationResult, PaymentRequest,
+    PaymentRequest3d, PaymentRequest3ds2, PaymentResult, PaymentResultCode, RefundRequest,
 };

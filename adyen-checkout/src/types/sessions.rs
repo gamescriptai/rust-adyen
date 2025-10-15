@@ -1,7 +1,7 @@
 //! Checkout session types for creating and managing sessions.
 
-use adyen_core::{Amount, AdyenError, Result};
 use crate::types::payments::Address;
+use adyen_core::{AdyenError, Amount, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -290,13 +290,17 @@ impl CreateCheckoutSessionRequestBuilder {
     ///
     /// Returns an error if required fields are not set.
     pub fn build(self) -> Result<CreateCheckoutSessionRequest> {
-        let amount = self.amount
+        let amount = self
+            .amount
             .ok_or_else(|| AdyenError::config("amount is required"))?;
-        let merchant_account = self.merchant_account
+        let merchant_account = self
+            .merchant_account
             .ok_or_else(|| AdyenError::config("merchant_account is required"))?;
-        let reference = self.reference
+        let reference = self
+            .reference
             .ok_or_else(|| AdyenError::config("reference is required"))?;
-        let return_url = self.return_url
+        let return_url = self
+            .return_url
             .ok_or_else(|| AdyenError::config("return_url is required"))?;
 
         Ok(CreateCheckoutSessionRequest {
@@ -330,7 +334,11 @@ impl CreateCheckoutSessionRequest {
 impl LineItem {
     /// Create a new line item.
     #[must_use]
-    pub fn new(description: impl Into<String>, quantity: u32, amount_including_tax: Amount) -> Self {
+    pub fn new(
+        description: impl Into<String>,
+        quantity: u32,
+        amount_including_tax: Amount,
+    ) -> Self {
         Self {
             id: None,
             description: description.into(),
@@ -353,7 +361,12 @@ impl LineItem {
 
     /// Set the tax information.
     #[must_use]
-    pub fn with_tax(mut self, amount_excluding_tax: Amount, tax_amount: Amount, tax_percentage: u32) -> Self {
+    pub fn with_tax(
+        mut self,
+        amount_excluding_tax: Amount,
+        tax_amount: Amount,
+        tax_percentage: u32,
+    ) -> Self {
         self.amount_excluding_tax = Some(amount_excluding_tax);
         self.tax_amount = Some(tax_amount);
         self.tax_percentage = Some(tax_percentage);

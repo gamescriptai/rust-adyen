@@ -123,7 +123,7 @@ impl BasicAuth {
     pub fn authorization_header(&self) -> String {
         let credentials = format!("{}:{}", self.username, self.password);
         let encoded = base64::prelude::BASE64_STANDARD.encode(credentials);
-        format!("Basic {}", encoded)
+        format!("Basic {encoded}")
     }
 }
 
@@ -200,7 +200,7 @@ impl fmt::Display for Credentials {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::ApiKey(_) => write!(f, "ApiKey([REDACTED])"),
-            Self::Basic(auth) => write!(f, "{}", auth),
+            Self::Basic(auth) => write!(f, "{auth}"),
         }
     }
 }
@@ -226,7 +226,7 @@ mod tests {
     #[test]
     fn test_api_key_debug() {
         let key = ApiKey::new("secret_key_12345").unwrap();
-        let debug_str = format!("{:?}", key);
+        let debug_str = format!("{key:?}");
         assert!(!debug_str.contains("secret_key_12345"));
         assert!(debug_str.contains("REDACTED"));
     }
@@ -254,7 +254,7 @@ mod tests {
     #[test]
     fn test_basic_auth_debug() {
         let auth = BasicAuth::new("username", "secret_password").unwrap();
-        let debug_str = format!("{:?}", auth);
+        let debug_str = format!("{auth:?}");
         assert!(debug_str.contains("username"));
         assert!(!debug_str.contains("secret_password"));
         assert!(debug_str.contains("REDACTED"));

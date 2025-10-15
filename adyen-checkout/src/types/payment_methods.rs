@@ -1,6 +1,6 @@
 //! Payment methods request and response types.
 
-use adyen_core::{Amount, AdyenError, Result};
+use adyen_core::{AdyenError, Amount, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -251,7 +251,8 @@ impl PaymentMethodsRequestBuilder {
     ///
     /// Returns an error if the merchant account is not set.
     pub fn build(self) -> Result<PaymentMethodsRequest> {
-        let merchant_account = self.merchant_account
+        let merchant_account = self
+            .merchant_account
             .ok_or_else(|| AdyenError::config("merchant_account is required"))?;
 
         Ok(PaymentMethodsRequest {
@@ -328,6 +329,9 @@ mod tests {
     fn test_channel_serialization() {
         assert_eq!(serde_json::to_string(&Channel::Web).unwrap(), "\"Web\"");
         assert_eq!(serde_json::to_string(&Channel::Ios).unwrap(), "\"iOS\"");
-        assert_eq!(serde_json::to_string(&Channel::Android).unwrap(), "\"Android\"");
+        assert_eq!(
+            serde_json::to_string(&Channel::Android).unwrap(),
+            "\"Android\""
+        );
     }
 }

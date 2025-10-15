@@ -1,9 +1,12 @@
 //! Payment modification types for capture, cancel, refund, and adjustment operations.
 
-use adyen_core::Amount;
 use crate::types::ApplicationInfo;
+use adyen_core::Amount;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+
+/// Type alias for additional data maps to reduce complexity warnings.
+pub type AdditionalData = HashMap<Box<str>, Box<str>>;
 
 /// Request to capture an authorized payment.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -30,6 +33,7 @@ pub struct CaptureRequest {
 
 impl CaptureRequest {
     /// Create a new capture request builder.
+    #[must_use]
     pub fn builder() -> CaptureRequestBuilder {
         CaptureRequestBuilder::default()
     }
@@ -54,6 +58,7 @@ impl CaptureRequestBuilder {
     }
 
     /// Set the modification amount.
+    #[must_use]
     pub fn modification_amount(mut self, amount: Amount) -> Self {
         self.modification_amount = Some(amount);
         self
@@ -72,12 +77,14 @@ impl CaptureRequestBuilder {
     }
 
     /// Add additional data.
+    #[must_use]
     pub fn additional_data(mut self, data: HashMap<Box<str>, Box<str>>) -> Self {
         self.additional_data = Some(data);
         self
     }
 
     /// Set application info.
+    #[must_use]
     pub fn application_info(mut self, info: ApplicationInfo) -> Self {
         self.application_info = Some(info);
         self
@@ -90,9 +97,15 @@ impl CaptureRequestBuilder {
     /// Returns an error if required fields are missing.
     pub fn build(self) -> Result<CaptureRequest, Box<str>> {
         Ok(CaptureRequest {
-            merchant_account: self.merchant_account.ok_or("merchant_account is required")?,
-            modification_amount: self.modification_amount.ok_or("modification_amount is required")?,
-            original_reference: self.original_reference.ok_or("original_reference is required")?,
+            merchant_account: self
+                .merchant_account
+                .ok_or("merchant_account is required")?,
+            modification_amount: self
+                .modification_amount
+                .ok_or("modification_amount is required")?,
+            original_reference: self
+                .original_reference
+                .ok_or("original_reference is required")?,
             reference: self.reference,
             additional_data: self.additional_data,
             application_info: self.application_info,
@@ -122,6 +135,7 @@ pub struct CancelRequest {
 
 impl CancelRequest {
     /// Create a new cancel request builder.
+    #[must_use]
     pub fn builder() -> CancelRequestBuilder {
         CancelRequestBuilder::default()
     }
@@ -157,12 +171,14 @@ impl CancelRequestBuilder {
     }
 
     /// Add additional data.
+    #[must_use]
     pub fn additional_data(mut self, data: HashMap<Box<str>, Box<str>>) -> Self {
         self.additional_data = Some(data);
         self
     }
 
     /// Set application info.
+    #[must_use]
     pub fn application_info(mut self, info: ApplicationInfo) -> Self {
         self.application_info = Some(info);
         self
@@ -175,8 +191,12 @@ impl CancelRequestBuilder {
     /// Returns an error if required fields are missing.
     pub fn build(self) -> Result<CancelRequest, Box<str>> {
         Ok(CancelRequest {
-            merchant_account: self.merchant_account.ok_or("merchant_account is required")?,
-            original_reference: self.original_reference.ok_or("original_reference is required")?,
+            merchant_account: self
+                .merchant_account
+                .ok_or("merchant_account is required")?,
+            original_reference: self
+                .original_reference
+                .ok_or("original_reference is required")?,
             reference: self.reference,
             additional_data: self.additional_data,
             application_info: self.application_info,
@@ -209,6 +229,7 @@ pub struct RefundRequest {
 
 impl RefundRequest {
     /// Create a new refund request builder.
+    #[must_use]
     pub fn builder() -> RefundRequestBuilder {
         RefundRequestBuilder::default()
     }
@@ -233,6 +254,7 @@ impl RefundRequestBuilder {
     }
 
     /// Set the modification amount.
+    #[must_use]
     pub fn modification_amount(mut self, amount: Amount) -> Self {
         self.modification_amount = Some(amount);
         self
@@ -251,12 +273,14 @@ impl RefundRequestBuilder {
     }
 
     /// Add additional data.
+    #[must_use]
     pub fn additional_data(mut self, data: HashMap<Box<str>, Box<str>>) -> Self {
         self.additional_data = Some(data);
         self
     }
 
     /// Set application info.
+    #[must_use]
     pub fn application_info(mut self, info: ApplicationInfo) -> Self {
         self.application_info = Some(info);
         self
@@ -269,9 +293,15 @@ impl RefundRequestBuilder {
     /// Returns an error if required fields are missing.
     pub fn build(self) -> Result<RefundRequest, Box<str>> {
         Ok(RefundRequest {
-            merchant_account: self.merchant_account.ok_or("merchant_account is required")?,
-            modification_amount: self.modification_amount.ok_or("modification_amount is required")?,
-            original_reference: self.original_reference.ok_or("original_reference is required")?,
+            merchant_account: self
+                .merchant_account
+                .ok_or("merchant_account is required")?,
+            modification_amount: self
+                .modification_amount
+                .ok_or("modification_amount is required")?,
+            original_reference: self
+                .original_reference
+                .ok_or("original_reference is required")?,
             reference: self.reference,
             additional_data: self.additional_data,
             application_info: self.application_info,
@@ -301,6 +331,7 @@ pub struct CancelOrRefundRequest {
 
 impl CancelOrRefundRequest {
     /// Create a new cancel or refund request builder.
+    #[must_use]
     pub fn builder() -> CancelOrRefundRequestBuilder {
         CancelOrRefundRequestBuilder::default()
     }
@@ -336,12 +367,14 @@ impl CancelOrRefundRequestBuilder {
     }
 
     /// Add additional data.
+    #[must_use]
     pub fn additional_data(mut self, data: HashMap<Box<str>, Box<str>>) -> Self {
         self.additional_data = Some(data);
         self
     }
 
     /// Set application info.
+    #[must_use]
     pub fn application_info(mut self, info: ApplicationInfo) -> Self {
         self.application_info = Some(info);
         self
@@ -354,8 +387,12 @@ impl CancelOrRefundRequestBuilder {
     /// Returns an error if required fields are missing.
     pub fn build(self) -> Result<CancelOrRefundRequest, Box<str>> {
         Ok(CancelOrRefundRequest {
-            merchant_account: self.merchant_account.ok_or("merchant_account is required")?,
-            original_reference: self.original_reference.ok_or("original_reference is required")?,
+            merchant_account: self
+                .merchant_account
+                .ok_or("merchant_account is required")?,
+            original_reference: self
+                .original_reference
+                .ok_or("original_reference is required")?,
             reference: self.reference,
             additional_data: self.additional_data,
             application_info: self.application_info,
@@ -420,6 +457,7 @@ pub struct AdjustAuthorizationRequest {
 
 impl AdjustAuthorizationRequest {
     /// Create a new adjust authorization request builder.
+    #[must_use]
     pub fn builder() -> AdjustAuthorizationRequestBuilder {
         AdjustAuthorizationRequestBuilder::default()
     }
@@ -444,6 +482,7 @@ impl AdjustAuthorizationRequestBuilder {
     }
 
     /// Set the modification amount.
+    #[must_use]
     pub fn modification_amount(mut self, amount: Amount) -> Self {
         self.modification_amount = Some(amount);
         self
@@ -462,12 +501,14 @@ impl AdjustAuthorizationRequestBuilder {
     }
 
     /// Add additional data.
+    #[must_use]
     pub fn additional_data(mut self, data: HashMap<Box<str>, Box<str>>) -> Self {
         self.additional_data = Some(data);
         self
     }
 
     /// Set application info.
+    #[must_use]
     pub fn application_info(mut self, info: ApplicationInfo) -> Self {
         self.application_info = Some(info);
         self
@@ -480,9 +521,15 @@ impl AdjustAuthorizationRequestBuilder {
     /// Returns an error if required fields are missing.
     pub fn build(self) -> Result<AdjustAuthorizationRequest, Box<str>> {
         Ok(AdjustAuthorizationRequest {
-            merchant_account: self.merchant_account.ok_or("merchant_account is required")?,
-            modification_amount: self.modification_amount.ok_or("modification_amount is required")?,
-            original_reference: self.original_reference.ok_or("original_reference is required")?,
+            merchant_account: self
+                .merchant_account
+                .ok_or("merchant_account is required")?,
+            modification_amount: self
+                .modification_amount
+                .ok_or("modification_amount is required")?,
+            original_reference: self
+                .original_reference
+                .ok_or("original_reference is required")?,
             reference: self.reference,
             additional_data: self.additional_data,
             application_info: self.application_info,
@@ -626,7 +673,9 @@ mod tests {
             .original_reference("8515131751004933")
             .build();
         assert!(result.is_err());
-        assert!(result.unwrap_err().contains("modification_amount is required"));
+        assert!(result
+            .unwrap_err()
+            .contains("modification_amount is required"));
 
         // Test missing original reference
         let result = CaptureRequest::builder()
@@ -634,6 +683,8 @@ mod tests {
             .modification_amount(Amount::from_major_units(100, Currency::EUR))
             .build();
         assert!(result.is_err());
-        assert!(result.unwrap_err().contains("original_reference is required"));
+        assert!(result
+            .unwrap_err()
+            .contains("original_reference is required"));
     }
 }

@@ -1,15 +1,13 @@
 //! Integration tests for Classic Payments API flows.
 
-use adyen_core::{Amount, Currency, Config, ConfigBuilder, Environment};
-use adyen_payments::{
-    PaymentsApi, ModificationsApi, PaymentRequest, Card,
-    CaptureRequest, CancelRequest, RefundRequest, CancelOrRefundRequest,
-    PaymentRequest3d,
+use adyen_core::{Amount, Config, ConfigBuilder, Currency, Environment};
+use adyen_payments::types::fraud::{
+    DeviceFingerprint, FraudAction, FraudCheckResult, FraudResult, RiskData, RiskLevel,
 };
 use adyen_payments::types::BrowserInfo;
-use adyen_payments::types::fraud::{
-    DeviceFingerprint, RiskData, FraudResult, FraudCheckResult,
-    RiskLevel, FraudAction,
+use adyen_payments::{
+    CancelOrRefundRequest, CancelRequest, CaptureRequest, Card, ModificationsApi, PaymentRequest,
+    PaymentRequest3d, PaymentsApi, RefundRequest,
 };
 use std::collections::HashMap;
 
@@ -73,12 +71,24 @@ mod payment_tests {
         assert_eq!(payment_request.reference, "complete-payment-001");
         assert_eq!(payment_request.country_code.as_deref(), Some("US"));
         assert_eq!(payment_request.shopper_locale.as_deref(), Some("en_US"));
-        assert_eq!(payment_request.shopper_email.as_deref(), Some("test@example.com"));
-        assert_eq!(payment_request.shopper_reference.as_deref(), Some("SHOPPER_001"));
+        assert_eq!(
+            payment_request.shopper_email.as_deref(),
+            Some("test@example.com")
+        );
+        assert_eq!(
+            payment_request.shopper_reference.as_deref(),
+            Some("SHOPPER_001")
+        );
 
         let additional_data = payment_request.additional_data.unwrap();
-        assert_eq!(additional_data.get("customField1").map(|s| s.as_str()), Some("value1"));
-        assert_eq!(additional_data.get("customField2").map(|s| s.as_str()), Some("value2"));
+        assert_eq!(
+            additional_data.get("customField1").map(|s| s.as_str()),
+            Some("value1")
+        );
+        assert_eq!(
+            additional_data.get("customField2").map(|s| s.as_str()),
+            Some("value2")
+        );
     }
 
     #[test]
@@ -122,7 +132,8 @@ mod three_d_secure_tests {
     #[test]
     fn test_3ds1_payment_request() {
         let browser_info = BrowserInfo {
-            accept_header: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8".to_string(),
+            accept_header: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                .to_string(),
             user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36".to_string(),
             color_depth: 24,
             java_enabled: false,
@@ -173,7 +184,10 @@ mod modification_tests {
         assert_eq!(request.reference.as_deref(), Some("capture-001"));
 
         let additional_data = request.additional_data.unwrap();
-        assert_eq!(additional_data.get("invoiceNumber").map(|s| s.as_ref()), Some("INV-2023-001"));
+        assert_eq!(
+            additional_data.get("invoiceNumber").map(|s| s.as_ref()),
+            Some("INV-2023-001")
+        );
     }
 
     #[test]
@@ -194,7 +208,10 @@ mod modification_tests {
         assert_eq!(request.reference.as_deref(), Some("cancel-001"));
 
         let additional_data = request.additional_data.unwrap();
-        assert_eq!(additional_data.get("cancelReason").map(|s| s.as_ref()), Some("customer_request"));
+        assert_eq!(
+            additional_data.get("cancelReason").map(|s| s.as_ref()),
+            Some("customer_request")
+        );
     }
 
     #[test]
@@ -219,8 +236,16 @@ mod modification_tests {
         assert_eq!(request.reference.as_deref(), Some("refund-001"));
 
         let additional_data = request.additional_data.unwrap();
-        assert_eq!(additional_data.get("refundReason").map(|s| s.as_ref()), Some("defective_product"));
-        assert_eq!(additional_data.get("customerNotificationSent").map(|s| s.as_ref()), Some("true"));
+        assert_eq!(
+            additional_data.get("refundReason").map(|s| s.as_ref()),
+            Some("defective_product")
+        );
+        assert_eq!(
+            additional_data
+                .get("customerNotificationSent")
+                .map(|s| s.as_ref()),
+            Some("true")
+        );
     }
 
     #[test]
@@ -300,9 +325,18 @@ mod fraud_detection_tests {
     #[test]
     fn test_fraud_check_result_with_metadata() {
         let mut metadata = HashMap::new();
-        metadata.insert("provider_version".into(), serde_json::Value::String("2.1".to_string()));
-        metadata.insert("check_duration_ms".into(), serde_json::Value::Number(serde_json::Number::from(150)));
-        metadata.insert("confidence_score".into(), serde_json::Value::Number(serde_json::Number::from_f64(0.95).unwrap()));
+        metadata.insert(
+            "provider_version".into(),
+            serde_json::Value::String("2.1".to_string()),
+        );
+        metadata.insert(
+            "check_duration_ms".into(),
+            serde_json::Value::Number(serde_json::Number::from(150)),
+        );
+        metadata.insert(
+            "confidence_score".into(),
+            serde_json::Value::Number(serde_json::Number::from_f64(0.95).unwrap()),
+        );
 
         let fraud_check = FraudCheckResult {
             name: "CyberSourceFraud".into(),
@@ -320,7 +354,10 @@ mod fraud_detection_tests {
         assert_eq!(fraud_check.action, FraudAction::Review);
 
         let metadata = fraud_check.metadata.unwrap();
-        assert_eq!(metadata.get("provider_version"), Some(&serde_json::Value::String("2.1".to_string())));
+        assert_eq!(
+            metadata.get("provider_version"),
+            Some(&serde_json::Value::String("2.1".to_string()))
+        );
         assert!(metadata.contains_key("check_duration_ms"));
         assert!(metadata.contains_key("confidence_score"));
     }
@@ -367,15 +404,30 @@ mod fraud_detection_tests {
             .skip_fraud(false)
             .build();
 
-        assert_eq!(risk_data.client_data.as_deref(), Some("encrypted_client_data_base64"));
+        assert_eq!(
+            risk_data.client_data.as_deref(),
+            Some("encrypted_client_data_base64")
+        );
         assert_eq!(risk_data.fraud_offset, Some(100));
-        assert_eq!(risk_data.profile_reference.as_deref(), Some("risk_profile_001"));
+        assert_eq!(
+            risk_data.profile_reference.as_deref(),
+            Some("risk_profile_001")
+        );
         assert_eq!(risk_data.skip_fraud, Some(false));
 
         let custom_fields = risk_data.custom_fields.unwrap();
-        assert_eq!(custom_fields.get("merchant_category").map(|s| s.as_ref()), Some("retail"));
-        assert_eq!(custom_fields.get("customer_tier").map(|s| s.as_ref()), Some("premium"));
-        assert_eq!(custom_fields.get("transaction_context").map(|s| s.as_ref()), Some("recurring"));
+        assert_eq!(
+            custom_fields.get("merchant_category").map(|s| s.as_ref()),
+            Some("retail")
+        );
+        assert_eq!(
+            custom_fields.get("customer_tier").map(|s| s.as_ref()),
+            Some("premium")
+        );
+        assert_eq!(
+            custom_fields.get("transaction_context").map(|s| s.as_ref()),
+            Some("recurring")
+        );
     }
 }
 
@@ -425,7 +477,10 @@ mod end_to_end_flow_tests {
             .unwrap();
 
         assert_eq!(cancel_request.original_reference.as_ref(), psp_reference);
-        assert_eq!(cancel_request.reference.as_deref(), Some("cancel-customer-request-001"));
+        assert_eq!(
+            cancel_request.reference.as_deref(),
+            Some("cancel-customer-request-001")
+        );
     }
 
     /// Simulate a 3D Secure flow: authorization -> 3D Secure challenge -> completion
@@ -439,7 +494,8 @@ mod end_to_end_flow_tests {
 
         // Step 3: Create 3D Secure authentication request
         let browser_info = BrowserInfo {
-            accept_header: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8".to_string(),
+            accept_header: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+                .to_string(),
             user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36".to_string(),
             color_depth: 24,
             java_enabled: false,
@@ -478,6 +534,9 @@ mod end_to_end_flow_tests {
             .unwrap();
 
         assert_eq!(refund_request.modification_amount.minor_units(), 2500);
-        assert_eq!(refund_request.original_reference.as_ref(), captured_psp_reference);
+        assert_eq!(
+            refund_request.original_reference.as_ref(),
+            captured_psp_reference
+        );
     }
 }

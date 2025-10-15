@@ -1,10 +1,10 @@
 //! Integration tests for the Adyen Legal Entity API v3.
 
 use adyen_core::{ConfigBuilder, Environment};
-use adyen_legal_entity::{
-    LegalEntityApi, LegalEntityInfo, BusinessLineInfo, TransferInstrumentInfo, OnboardingLinkInfo
-};
 use adyen_legal_entity::types::*;
+use adyen_legal_entity::{
+    BusinessLineInfo, LegalEntityApi, LegalEntityInfo, OnboardingLinkInfo, TransferInstrumentInfo,
+};
 
 fn create_test_config() -> adyen_core::Config {
     ConfigBuilder::new()
@@ -75,7 +75,10 @@ mod request_building_tests {
 
         assert!(matches!(request.r#type, LegalEntityType::Individual));
         assert!(request.individual.is_some());
-        assert_eq!(request.reference.as_ref().unwrap().as_ref(), "individual_001");
+        assert_eq!(
+            request.reference.as_ref().unwrap().as_ref(),
+            "individual_001"
+        );
     }
 
     #[test]
@@ -144,7 +147,10 @@ mod request_building_tests {
 
         assert!(matches!(request.r#type, LegalEntityType::Organization));
         assert!(request.organization.is_some());
-        assert_eq!(request.organization.as_ref().unwrap().legal_name.as_ref(), "Example Corp");
+        assert_eq!(
+            request.organization.as_ref().unwrap().legal_name.as_ref(),
+            "Example Corp"
+        );
     }
 
     #[test]
@@ -170,12 +176,14 @@ mod request_building_tests {
     fn test_transfer_instrument_info() {
         let bank_account = BankAccountInfo {
             account_holder: "Example Corp".into(),
-            account_identification: BankAccountIdentification::UsLocal(UsLocalAccountIdentification {
-                account_number: "123456789".into(),
-                account_type: Some(UsAccountType::Checking),
-                routing_number: "021000021".into(),
-                r#type: "usLocal".into(),
-            }),
+            account_identification: BankAccountIdentification::UsLocal(
+                UsLocalAccountIdentification {
+                    account_number: "123456789".into(),
+                    account_type: Some(UsAccountType::Checking),
+                    routing_number: "021000021".into(),
+                    r#type: "usLocal".into(),
+                },
+            ),
         };
 
         let request = TransferInstrumentInfo {
@@ -185,14 +193,20 @@ mod request_building_tests {
         };
 
         assert_eq!(request.legal_entity_id.as_ref(), "LE12345");
-        assert!(matches!(request.r#type, TransferInstrumentType::BankAccount));
+        assert!(matches!(
+            request.r#type,
+            TransferInstrumentType::BankAccount
+        ));
         assert!(request.bank_account.is_some());
     }
 
     #[test]
     fn test_onboarding_link_info() {
         let settings = OnboardingLinkSettings {
-            collect_entity_types: Some(vec![LegalEntityType::Individual, LegalEntityType::Organization]),
+            collect_entity_types: Some(vec![
+                LegalEntityType::Individual,
+                LegalEntityType::Organization,
+            ]),
             enable_manual_review: Some(true),
             required_verification_checks: Some(vec![
                 VerificationCheckType::IdentityVerification,
@@ -291,13 +305,34 @@ mod serialization_tests {
 
     #[test]
     fn test_enum_serialization() {
-        assert_eq!(serde_json::to_string(&LegalEntityType::Individual).unwrap(), "\"individual\"");
-        assert_eq!(serde_json::to_string(&PhoneType::Mobile).unwrap(), "\"mobile\"");
-        assert_eq!(serde_json::to_string(&IdentificationType::Passport).unwrap(), "\"passport\"");
-        assert_eq!(serde_json::to_string(&OrganizationType::LimitedLiabilityCompany).unwrap(), "\"limitedLiabilityCompany\"");
-        assert_eq!(serde_json::to_string(&SalesChannel::Ecommerce).unwrap(), "\"ecommerce\"");
-        assert_eq!(serde_json::to_string(&VerificationStatus::Valid).unwrap(), "\"valid\"");
-        assert_eq!(serde_json::to_string(&TransferInstrumentType::BankAccount).unwrap(), "\"bankAccount\"");
+        assert_eq!(
+            serde_json::to_string(&LegalEntityType::Individual).unwrap(),
+            "\"individual\""
+        );
+        assert_eq!(
+            serde_json::to_string(&PhoneType::Mobile).unwrap(),
+            "\"mobile\""
+        );
+        assert_eq!(
+            serde_json::to_string(&IdentificationType::Passport).unwrap(),
+            "\"passport\""
+        );
+        assert_eq!(
+            serde_json::to_string(&OrganizationType::LimitedLiabilityCompany).unwrap(),
+            "\"limitedLiabilityCompany\""
+        );
+        assert_eq!(
+            serde_json::to_string(&SalesChannel::Ecommerce).unwrap(),
+            "\"ecommerce\""
+        );
+        assert_eq!(
+            serde_json::to_string(&VerificationStatus::Valid).unwrap(),
+            "\"valid\""
+        );
+        assert_eq!(
+            serde_json::to_string(&TransferInstrumentType::BankAccount).unwrap(),
+            "\"bankAccount\""
+        );
     }
 }
 
@@ -415,12 +450,14 @@ mod workflow_tests {
             r#type: TransferInstrumentType::BankAccount,
             bank_account: Some(BankAccountInfo {
                 account_holder: "Alice Johnson".into(),
-                account_identification: BankAccountIdentification::UsLocal(UsLocalAccountIdentification {
-                    account_number: "987654321".into(),
-                    account_type: Some(UsAccountType::Checking),
-                    routing_number: "011000015".into(),
-                    r#type: "usLocal".into(),
-                }),
+                account_identification: BankAccountIdentification::UsLocal(
+                    UsLocalAccountIdentification {
+                        account_number: "987654321".into(),
+                        account_type: Some(UsAccountType::Checking),
+                        routing_number: "011000015".into(),
+                        r#type: "usLocal".into(),
+                    },
+                ),
             }),
         };
 
@@ -438,10 +475,19 @@ mod workflow_tests {
         };
 
         // Verify the KYC workflow integrity
-        assert!(matches!(legal_entity_request.r#type, LegalEntityType::Individual));
+        assert!(matches!(
+            legal_entity_request.r#type,
+            LegalEntityType::Individual
+        ));
         assert!(legal_entity_request.individual.is_some());
-        assert!(matches!(verification_document.r#type, DocumentType::DriversLicense));
-        assert!(matches!(transfer_instrument.r#type, TransferInstrumentType::BankAccount));
+        assert!(matches!(
+            verification_document.r#type,
+            DocumentType::DriversLicense
+        ));
+        assert!(matches!(
+            transfer_instrument.r#type,
+            TransferInstrumentType::BankAccount
+        ));
         assert_eq!(business_line.industry.as_ref(), "7311");
     }
 
@@ -501,12 +547,14 @@ mod workflow_tests {
             r#type: TransferInstrumentType::BankAccount,
             bank_account: Some(BankAccountInfo {
                 account_holder: "TechCorp Solutions LLC".into(),
-                account_identification: BankAccountIdentification::UsLocal(UsLocalAccountIdentification {
-                    account_number: "1234567890".into(),
-                    account_type: Some(UsAccountType::Checking),
-                    routing_number: "021000021".into(),
-                    r#type: "usLocal".into(),
-                }),
+                account_identification: BankAccountIdentification::UsLocal(
+                    UsLocalAccountIdentification {
+                        account_number: "1234567890".into(),
+                        account_type: Some(UsAccountType::Checking),
+                        routing_number: "021000021".into(),
+                        r#type: "usLocal".into(),
+                    },
+                ),
             }),
         };
 
@@ -515,10 +563,12 @@ mod workflow_tests {
             r#type: TransferInstrumentType::BankAccount,
             bank_account: Some(BankAccountInfo {
                 account_holder: "TechCorp Solutions LLC".into(),
-                account_identification: BankAccountIdentification::Iban(IbanAccountIdentification {
-                    iban: "DE89370400440532013000".into(),
-                    r#type: "iban".into(),
-                }),
+                account_identification: BankAccountIdentification::Iban(
+                    IbanAccountIdentification {
+                        iban: "DE89370400440532013000".into(),
+                        r#type: "iban".into(),
+                    },
+                ),
             }),
         };
 
@@ -563,7 +613,10 @@ mod workflow_tests {
 
         // Verify organization onboarding workflow
         assert_eq!(organization.legal_name.as_ref(), "TechCorp Solutions LLC");
-        assert!(matches!(organization.r#type, Some(OrganizationType::LimitedLiabilityCompany)));
+        assert!(matches!(
+            organization.r#type,
+            Some(OrganizationType::LimitedLiabilityCompany)
+        ));
         assert!(us_bank_account.bank_account.is_some());
         assert!(eu_bank_account.bank_account.is_some());
         assert_eq!(software_business_line.industry.as_ref(), "5734");
@@ -626,9 +679,18 @@ mod workflow_tests {
         // Verify trust workflow
         assert_eq!(trust.name.as_ref(), "Johnson Family Trust");
         assert!(matches!(trust.r#type, Some(TrustType::IrrevocableTrust)));
-        assert!(matches!(trust.source_of_funds.as_ref().unwrap().r#type, FundsSourceType::Inheritance));
-        assert!(matches!(trustee_association.r#type, AssociationType::TrusteeBeneficiary));
-        assert!(matches!(beneficiary_association.r#type, AssociationType::BeneficialOwner));
+        assert!(matches!(
+            trust.source_of_funds.as_ref().unwrap().r#type,
+            FundsSourceType::Inheritance
+        ));
+        assert!(matches!(
+            trustee_association.r#type,
+            AssociationType::TrusteeBeneficiary
+        ));
+        assert!(matches!(
+            beneficiary_association.r#type,
+            AssociationType::BeneficialOwner
+        ));
     }
 }
 
